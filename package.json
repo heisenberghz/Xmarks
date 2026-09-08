@@ -1,0 +1,13 @@
+  {
+  "name": "x-bookmarks-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Personal tool to scrape, manage, tag, and search X (Twitter) bookmarks",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0",
+    "vitest": "^3.0.7"
+  }
+}

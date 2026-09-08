@@ -1,0 +1,43 @@
+[
+  {
+    "id": "1789012345678901234",
+    "text": "Shipping faster than ever with local-first tooling.",
+    "author_name": "Guillermo Rauch",
+    "author_handle": "@rauchg",
+    "timestamp": "2026-05-10T14:30:00.000Z",
+    "url": "https://x.com/rauchg/status/1789012345678901234",
+    "media": []
+  },
+  {
+    "id": "1789999999999999999",
+    "text": "New component updates are live! Clean typography and dense UI components.",
+    "author_name": "shadcn",
+    "author_handle": "@shadcn",
+    "timestamp": "2026-05-12T09:15:00.000Z",
+    "url": "https://x.com/shadcn/status/1789999999999999999",
+    "media": [
+      "https://pbs.twimg.com/media/F123456_thumb.jpg:large",
+      "https://pbs.twimg.com/media/F789012_thumb.jpg:large"
+    ]
+  },
+  {
+    "id": "1795555555555555555",
+    "text": "Video demo of the new tokenizer inspector.",
+    "author_name": "Andrej Karpathy",
+    "author_handle": "@karpathy",
+    "timestamp": "2026-05-15T18:00:00.000Z",
+    "url": "https://x.com/karpathy/status/1795555555555555555",
+    "media": [
+      "https://pbs.twimg.com/tweet_video_thumb/video_thumb_99.jpg"
+    ]
+  },
+  {
+    "id": "1801112223334445556",
+    "text": "Totally agree with this observation on AI workflows:",
+    "author_name": "swyx",
+    "author_handle": "@swyx",
+    "timestamp": "2026-05-18T12:00:00.000Z",
+    "url": "https://x.com/swyx/status/1801112223334445556",
+    "media": []
+  }
+]
