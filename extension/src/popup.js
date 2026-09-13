@@ -25,9 +25,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     activeTabId = tab.id;
     const url = tab.url || '';
 
-    const isBookmarksUrl = url.includes('x.com/i/bookmarks') || url.includes('twitter.com/i/bookmarks');
+    const isBookmarksUrl =
+      url.includes('x.com/i/bookmarks') ||
+      url.includes('twitter.com/i/bookmarks') ||
+      url.includes('x.com/i/history') ||
+      url.includes('twitter.com/i/history');
+
     if (!isBookmarksUrl) {
-      showDisabledState("Please navigate to x.com/i/bookmarks to scrape.");
+      showDisabledState("Please navigate to x.com/i/history (Bookmarks tab) to scrape.");
       return;
     }
 
@@ -112,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         statusText.textContent = state.status || 'Idle';
       }
 
-      noticeText.textContent = 'Must be on x.com/i/bookmarks. Exports to JSON automatically.';
+      noticeText.textContent = 'Ensure "Bookmarks" tab is active. Exports to JSON automatically.';
     }
   }
 

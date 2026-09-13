@@ -1,6 +1,6 @@
 /**
  * Chrome Extension Content Script (Manifest V3)
- * Injected on x.com/i/bookmarks and twitter.com/i/bookmarks.
+ * Injected on x.com/i/bookmarks, x.com/i/history, twitter.com/i/bookmarks, twitter.com/i/history.
  * Manages scraping loop, deduplication, and export coordination.
  */
 
@@ -18,6 +18,38 @@
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const getRandomDelay = (min = 800, max = 1500) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+  // Tab checking logic for /i/history
+  function isBookmarksTabSelected() {
+    const path = window.location.pathname;
+    const tabs = document.querySelectorAll('[role="tab"]');
+
+    if (tabs.length === 0) {
+      return path.includes('/i/bookmarks');
+    }
+
+    let bookmarksTab = null;
+    let likesTab = null;
+
+    for (const tab of tabs) {
+      const text = (tab.innerText || tab.textContent || '').trim().toLowerCase();
+      if (text.includes('bookmark')) {
+        bookmarksTab = tab;
+      } else if (text.includes('like')) {
+        likesTab = tab;
+      }
+    }
+
+    if (bookmarksTab) {
+      return bookmarksTab.getAttribute('aria-selected') === 'true';
+    }
+
+    if (likesTab && likesTab.getAttribute('aria-selected') === 'true') {
+      return false;
+    }
+
+    return path.includes('/i/bookmarks');
+  }
 
   // Pure extraction logic
   function extractTweet(article) {
@@ -180,9 +212,16 @@
 
   function checkErrors() {
     const path = window.location.pathname;
-    if (!path.includes('/i/bookmarks')) {
-      return "Could not find bookmarks — check you're on the bookmarks page";
+    const isBookmarksRoute = path.includes('/i/bookmarks') || path.includes('/i/history');
+    if (!isBookmarksRoute) {
+      return "Could not find bookmarks — check you're on x.com/i/bookmarks or x.com/i/history";
     }
+
+    // Check Bookmarks tab selection
+    if (!isBookmarksTabSelected()) {
+      return 'Please click the Bookmarks tab before running this scraper';
+    }
+
     const bodyText = document.body ? (document.body.innerText || '') : '';
     if (document.querySelector('[data-testid="login"], [data-testid="sheetDialog"]') || (bodyText.includes('Log in to X') && !document.querySelector('article'))) {
       return 'Login required';
@@ -202,13 +241,11 @@
     const filename = `bookmarks-export-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
     const jsonContent = JSON.stringify(collectedBookmarks, null, 2);
 
-    // Try exporting via background service worker
     try {
       chrome.runtime.sendMessage(
         { action: 'DOWNLOAD_JSON', filename, jsonContent },
         (res) => {
           if (!res || !res.success) {
-            // Fallback: direct blob download in DOM
             fallbackBlobDownload(jsonContent, filename);
           }
         }
@@ -240,7 +277,6 @@
     lastError = null;
     status = 'Scraping... (0 collected)';
 
-    // Initial check
     const initialErr = checkErrors();
     if (initialErr) {
       isRunning = false;
@@ -249,7 +285,6 @@
       return;
     }
 
-    // Reset or carry over? If new session, reset
     collectedBookmarks = [];
     seenIds.clear();
 
@@ -304,12 +339,15 @@
   // Chrome runtime message handling
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'GET_STATUS') {
+      const path = window.location.pathname;
+      const isRouteMatch = path.includes('/i/bookmarks') || path.includes('/i/history');
       sendResponse({
         isRunning,
         count: collectedBookmarks.length,
         status,
         lastError,
-        isBookmarksPage: window.location.pathname.includes('/i/bookmarks')
+        isBookmarksPage: isRouteMatch,
+        isTabSelected: isBookmarksTabSelected()
       });
       return false;
     }

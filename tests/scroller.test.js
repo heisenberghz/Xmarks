@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { checkPageStatus, isLoadingSpinnerVisible, getRandomDelay } from '../extension/src/scroller.js';
+import {
+  checkPageStatus,
+  isBookmarksTabSelected,
+  isLoadingSpinnerVisible,
+  getRandomDelay,
+} from '../extension/src/scroller.js';
 
 describe('Scroller Helpers & Page Status Detection', () => {
   let dom;
@@ -13,12 +18,55 @@ describe('Scroller Helpers & Page Status Detection', () => {
     global.window = dom.window;
   });
 
-  it('detects valid bookmarks page with no errors', () => {
+  it('detects valid legacy /i/bookmarks page with no errors', () => {
     const status = checkPageStatus(document);
     expect(status.hasError).toBe(false);
   });
 
-  it('detects non-bookmarks page error', () => {
+  it('detects valid /i/history page when Bookmarks tab is active', () => {
+    const historyDom = new JSDOM(
+      `<!DOCTYPE html><html><body>
+        <nav role="tablist">
+          <a role="tab" aria-selected="true"><span>Bookmarks</span></a>
+          <a role="tab" aria-selected="false"><span>Likes</span></a>
+        </nav>
+      </body></html>`,
+      { url: 'https://x.com/i/history' }
+    );
+    expect(isBookmarksTabSelected(historyDom.window.document)).toBe(true);
+    const status = checkPageStatus(historyDom.window.document);
+    expect(status.hasError).toBe(false);
+  });
+
+  it('blocks scraping on /i/history when Likes tab is active', () => {
+    const historyDom = new JSDOM(
+      `<!DOCTYPE html><html><body>
+        <nav role="tablist">
+          <a role="tab" aria-selected="false"><span>Bookmarks</span></a>
+          <a role="tab" aria-selected="true"><span>Likes</span></a>
+        </nav>
+      </body></html>`,
+      { url: 'https://x.com/i/history' }
+    );
+    expect(isBookmarksTabSelected(historyDom.window.document)).toBe(false);
+    const status = checkPageStatus(historyDom.window.document);
+    expect(status.hasError).toBe(true);
+    expect(status.errorType).toBe('TAB_NOT_SELECTED');
+    expect(status.message).toBe('Please click the Bookmarks tab before running this scraper');
+  });
+
+  it('blocks scraping on /i/history if no tabs are found yet', () => {
+    const historyDom = new JSDOM(
+      `<!DOCTYPE html><html><body><div>Loading empty shell...</div></body></html>`,
+      { url: 'https://x.com/i/history' }
+    );
+    expect(isBookmarksTabSelected(historyDom.window.document)).toBe(false);
+    const status = checkPageStatus(historyDom.window.document);
+    expect(status.hasError).toBe(true);
+    expect(status.errorType).toBe('TAB_NOT_SELECTED');
+  });
+
+  it('detects non-bookmarks / non-history page error', () => {
     const foreignDom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
       url: 'https://x.com/home',
     });

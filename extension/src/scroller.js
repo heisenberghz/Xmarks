@@ -22,22 +22,71 @@ export function getRandomDelay(min = 800, max = 1500) {
 }
 
 /**
- * Checks the DOM for known rate-limiting, authentication walls, or empty page errors.
+ * Checks if the "Bookmarks" tab is currently active/selected in the DOM.
+ * Essential for x.com/i/history which shares the same URL for Bookmarks and Likes.
+ * @param {Document} doc 
+ * @returns {boolean}
+ */
+export function isBookmarksTabSelected(doc = document) {
+  const path = (doc.location && doc.location.pathname) ? doc.location.pathname : (typeof window !== 'undefined' ? window.location?.pathname || '' : '');
+  const tabs = doc.querySelectorAll('[role="tab"]');
+
+  if (tabs.length === 0) {
+    // If no tab elements exist and URL is directly /i/bookmarks, it's valid
+    return path.includes('/i/bookmarks');
+  }
+
+  let bookmarksTab = null;
+  let likesTab = null;
+
+  for (const tab of tabs) {
+    const text = (tab.innerText || tab.textContent || '').trim().toLowerCase();
+    if (text.includes('bookmark')) {
+      bookmarksTab = tab;
+    } else if (text.includes('like')) {
+      likesTab = tab;
+    }
+  }
+
+  if (bookmarksTab) {
+    return bookmarksTab.getAttribute('aria-selected') === 'true';
+  }
+
+  if (likesTab && likesTab.getAttribute('aria-selected') === 'true') {
+    return false;
+  }
+
+  return path.includes('/i/bookmarks');
+}
+
+/**
+ * Checks the DOM for valid routing, active tab, rate-limiting, auth walls, or empty page errors.
  * @param {Document} doc 
  * @returns {{ hasError: boolean, errorType?: string, message?: string }}
  */
 export function checkPageStatus(doc = document) {
-  // 1. Verify URL is on bookmarks
-  const path = (doc.location && doc.location.pathname) ? doc.location.pathname : window.location?.pathname || '';
-  if (path && !path.includes('/i/bookmarks')) {
+  // 1. Verify URL is on bookmarks or history
+  const path = (doc.location && doc.location.pathname) ? doc.location.pathname : (typeof window !== 'undefined' ? window.location?.pathname || '' : '');
+  const isBookmarksRoute = path.includes('/i/bookmarks') || path.includes('/i/history');
+
+  if (path && !isBookmarksRoute) {
     return {
       hasError: true,
       errorType: 'INVALID_PAGE',
-      message: "Check you're on the bookmarks page (x.com/i/bookmarks)"
+      message: "Check you're on the bookmarks page (x.com/i/bookmarks or x.com/i/history)"
     };
   }
 
-  // 2. Check for login / auth wall
+  // 2. Verify Bookmarks tab is active if on /i/history or if tabs are present
+  if (!isBookmarksTabSelected(doc)) {
+    return {
+      hasError: true,
+      errorType: 'TAB_NOT_SELECTED',
+      message: 'Please click the Bookmarks tab before running this scraper'
+    };
+  }
+
+  // 3. Check for login / auth wall
   const loginModal = doc.querySelector('[data-testid="sheetDialog"], [data-testid="login"]');
   if (loginModal) {
     return {
@@ -49,7 +98,6 @@ export function checkPageStatus(doc = document) {
 
   const allText = doc.body ? (doc.body.innerText || doc.body.textContent || '') : '';
   if (allText.includes('Log in to X') || allText.includes('Sign in to X')) {
-    // Make sure it's not just a stray navigation link
     if (doc.querySelector('a[href="/login"]') && !doc.querySelector('article')) {
       return {
         hasError: true,
@@ -59,7 +107,7 @@ export function checkPageStatus(doc = document) {
     }
   }
 
-  // 3. Check for rate limit or "Something went wrong"
+  // 4. Check for rate limit or "Something went wrong"
   if (
     allText.includes('Something went wrong. Try reloading.') ||
     allText.includes('Rate limit exceeded') ||

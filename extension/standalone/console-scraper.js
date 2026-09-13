@@ -4,23 +4,65 @@
  * =========================================================================
  * 
  * Instructions:
- * 1. Open Chrome and navigate to https://x.com/i/bookmarks
- * 2. Make sure you are logged in and your bookmarks are visible.
- * 3. Open Chrome DevTools (Press F12 or Ctrl+Shift+I / Cmd+Option+I), switch to the "Console" tab.
+ * 1. Open Chrome and navigate to https://x.com/i/bookmarks or https://x.com/i/history
+ * 2. Make sure you are logged in and the "Bookmarks" tab is SELECTED.
+ * 3. Open Chrome DevTools (Press F12 or Ctrl+Shift+I / Cmd+Option+I), switch to "Console".
  * 4. Paste this entire script and press Enter.
  * 5. Watch the live progress in the console.
- * 6. When finished (or if you run `window.__X_SCRAPER__.stop()`), the script will
- *    automatically trigger the download of `bookmarks-export-<timestamp>.json`.
+ * 6. To stop early: run `window.__X_SCRAPER__.stop()` in the console.
+ * 7. When finished or stopped, Chrome automatically downloads `bookmarks-export-<timestamp>.json`.
  * =========================================================================
  */
 
 (async function runXBookmarksScraper() {
   console.log('%c[X Bookmarks Scraper] Initializing...', 'color: #1d9bf0; font-weight: bold; font-size: 14px;');
 
-  // Safety check: ensure on bookmarks page
-  if (!window.location.pathname.includes('/i/bookmarks')) {
-    console.error('%c[X Bookmarks Scraper] Error: You must be on https://x.com/i/bookmarks to run this scraper.', 'color: red; font-weight: bold;');
-    alert('Please navigate to https://x.com/i/bookmarks before running the scraper.');
+  const path = window.location.pathname;
+  const isBookmarksRoute = path.includes('/i/bookmarks') || path.includes('/i/history');
+
+  // 1. Safety check: ensure on bookmarks or history route
+  if (!isBookmarksRoute) {
+    const msg = 'Error: You must be on https://x.com/i/bookmarks or https://x.com/i/history to run this scraper.';
+    console.error(`%c[X Bookmarks Scraper] ${msg}`, 'color: red; font-weight: bold;');
+    alert(msg);
+    return;
+  }
+
+  // 2. Tab check helper: Ensure "Bookmarks" tab is selected on /i/history
+  function checkBookmarksTabSelected() {
+    const tabs = document.querySelectorAll('[role="tab"]');
+    if (tabs.length === 0) {
+      // Direct /i/bookmarks without tab bar is accepted
+      return path.includes('/i/bookmarks');
+    }
+
+    let bookmarksTab = null;
+    let likesTab = null;
+
+    for (const tab of tabs) {
+      const text = (tab.innerText || tab.textContent || '').trim().toLowerCase();
+      if (text.includes('bookmark')) {
+        bookmarksTab = tab;
+      } else if (text.includes('like')) {
+        likesTab = tab;
+      }
+    }
+
+    if (bookmarksTab) {
+      return bookmarksTab.getAttribute('aria-selected') === 'true';
+    }
+
+    if (likesTab && likesTab.getAttribute('aria-selected') === 'true') {
+      return false;
+    }
+
+    return path.includes('/i/bookmarks');
+  }
+
+  if (!checkBookmarksTabSelected()) {
+    const tabErrMsg = 'Please click the "Bookmarks" tab before running this scraper (currently on Likes or tab not selected).';
+    console.error(`%c[X Bookmarks Scraper] ${tabErrMsg}`, 'color: red; font-weight: bold;');
+    alert(tabErrMsg);
     return;
   }
 
@@ -222,8 +264,11 @@
     console.log(`%c[X Bookmarks Scraper] Successfully exported ${collectedBookmarks.length} bookmarks to ${filename}!`, 'color: #00ba7c; font-weight: bold; font-size: 14px;');
   }
 
-  // Check for error banners
+  // Check for error banners & tab switches
   function checkErrors() {
+    if (!checkBookmarksTabSelected()) {
+      return 'Please click the Bookmarks tab before running this scraper';
+    }
     const bodyText = document.body ? (document.body.innerText || '') : '';
     if (document.querySelector('[data-testid="login"], [data-testid="sheetDialog"]') || (bodyText.includes('Log in to X') && !document.querySelector('article'))) {
       return 'Error: Login required';
@@ -281,6 +326,6 @@
   if (collectedBookmarks.length > 0) {
     downloadJson();
   } else {
-    console.warn('%c[X Bookmarks Scraper] No bookmarks were collected. Are you sure you have bookmarks visible on the page?', 'color: orange;');
+    console.warn('%c[X Bookmarks Scraper] No bookmarks were collected. Make sure the Bookmarks tab is open with tweets visible.', 'color: orange;');
   }
 })();

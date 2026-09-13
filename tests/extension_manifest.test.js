@@ -16,6 +16,8 @@ describe('Chrome Extension Manifest & Files Verification', () => {
     expect(manifest.permissions).toContain('downloads');
     expect(manifest.host_permissions).toContain('https://x.com/i/bookmarks*');
     expect(manifest.host_permissions).toContain('https://twitter.com/i/bookmarks*');
+    expect(manifest.host_permissions).toContain('https://x.com/i/history*');
+    expect(manifest.host_permissions).toContain('https://twitter.com/i/history*');
 
     // Check referenced files exist
     const bgScript = path.join(extensionDir, manifest.background.service_worker);
@@ -25,6 +27,8 @@ describe('Chrome Extension Manifest & Files Verification', () => {
     expect(fs.existsSync(popupHtml)).toBe(true);
 
     for (const cs of manifest.content_scripts) {
+      expect(cs.matches).toContain('https://x.com/i/history*');
+      expect(cs.matches).toContain('https://twitter.com/i/history*');
       for (const script of cs.js) {
         const csPath = path.join(extensionDir, script);
         expect(fs.existsSync(csPath)).toBe(true);
