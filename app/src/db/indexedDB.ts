@@ -30,10 +30,15 @@ export async function getAllBookmarksFromDB(): Promise<Bookmark[]> {
     const request = store.getAll();
 
     request.onsuccess = () => {
-      // Sort newest timestamp first by default
-      const list = (request.result as Bookmark[]).sort(
-        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
+      // Sort by original bookmark sequence order first, then fall back to timestamp
+      const list = (request.result as Bookmark[]).sort((a, b) => {
+        if (a.order !== undefined && b.order !== undefined) {
+          return b.order - a.order;
+        }
+        if (a.order !== undefined) return -1;
+        if (b.order !== undefined) return 1;
+        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      });
       resolve(list);
     };
     request.onerror = () => reject(request.error);

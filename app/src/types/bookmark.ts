@@ -10,6 +10,7 @@ export interface Bookmark {
   tags: string[];          // user-assigned, manual in v1
   notes: string;           // free text, user-assigned
   imported_at: string;     // ISO 8601, when this record was ingested into the app
+  order?: number;          // original X bookmarks sequence index
 }
 
 export interface RawScrapedTweet {
@@ -24,6 +25,7 @@ export interface RawScrapedTweet {
   tags?: string[];
   notes?: string;
   imported_at?: string;
+  order?: number;
 }
 
 export interface ImportResult {

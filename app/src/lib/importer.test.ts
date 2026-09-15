@@ -95,4 +95,15 @@ describe('Importer & Deduplication Engine', () => {
     expect(() => parseAndDedupeBookmarks('not a json string', [])).toThrow();
     expect(() => parseAndDedupeBookmarks(JSON.stringify({ not: 'an array' }), [])).toThrow();
   });
+
+  it('preserves incoming bookmarks sequence order', () => {
+    const rawBatch = [
+      { id: '1', text: 'First bookmark on X' },
+      { id: '2', text: 'Second bookmark on X' },
+      { id: '3', text: 'Third bookmark on X' },
+    ];
+
+    const result = parseAndDedupeBookmarks(rawBatch, []);
+    expect(result.bookmarks.map((b) => b.id)).toEqual(['1', '2', '3']);
+  });
 });

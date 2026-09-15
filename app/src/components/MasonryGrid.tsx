@@ -11,6 +11,7 @@ interface MasonryGridProps {
   totalUnfilteredCount: number;
   onOpenImport: () => void;
   onClearFilters: () => void;
+  layoutMode?: 'masonry' | 'grid';
 }
 
 export const MasonryGrid: React.FC<MasonryGridProps> = ({
@@ -21,6 +22,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   totalUnfilteredCount,
   onOpenImport,
   onClearFilters,
+  layoutMode = 'masonry',
 }) => {
   // Empty state: No bookmarks imported yet
   if (totalUnfilteredCount === 0) {
@@ -67,19 +69,35 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
 
   return (
     <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
-      {/* Responsive Masonry Layout via CSS columns */}
-      <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5">
-        {bookmarks.map((bookmark) => (
-          <div key={bookmark.id} className="mb-4 break-inside-avoid">
-            <BookmarkCard
-              bookmark={bookmark}
-              onClick={onSelectBookmark}
-              onTagClick={onTagClick}
-              onDelete={onDeleteBookmark}
-            />
-          </div>
-        ))}
-      </div>
+      {layoutMode === 'masonry' ? (
+        /* The beloved interlocking masonry columns layout */
+        <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5">
+          {bookmarks.map((bookmark) => (
+            <div key={bookmark.id} className="mb-4 break-inside-avoid">
+              <BookmarkCard
+                bookmark={bookmark}
+                onClick={onSelectBookmark}
+                onTagClick={onTagClick}
+                onDelete={onDeleteBookmark}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        /* Horizontal row-by-row grid layout */
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 items-start">
+          {bookmarks.map((bookmark) => (
+            <div key={bookmark.id}>
+              <BookmarkCard
+                bookmark={bookmark}
+                onClick={onSelectBookmark}
+                onTagClick={onTagClick}
+                onDelete={onDeleteBookmark}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </main>
   );
 };
