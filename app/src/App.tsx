@@ -23,7 +23,6 @@ export const App: React.FC = () => {
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [layoutMode, setLayoutMode] = useState<'masonry' | 'grid'>('masonry');
 
   // Load from IndexedDB on startup
   useEffect(() => {
@@ -131,10 +130,6 @@ export const App: React.FC = () => {
         totalCount={bookmarks.length}
         filteredCount={filteredBookmarks.length}
         onOpenImport={() => setIsImportOpen(true)}
-        layoutMode={layoutMode}
-        onToggleLayoutMode={() =>
-          setLayoutMode((prev) => (prev === 'masonry' ? 'grid' : 'masonry'))
-        }
       />
 
       {/* Main Masonry Grid Area */}
@@ -145,7 +140,6 @@ export const App: React.FC = () => {
         onDeleteBookmark={handlePromptDelete}
         totalUnfilteredCount={bookmarks.length}
         onOpenImport={() => setIsImportOpen(true)}
-        layoutMode={layoutMode}
         onClearFilters={() => {
           setSearchQuery('');
           setSelectedTags([]);

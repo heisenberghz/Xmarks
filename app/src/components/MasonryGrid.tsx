@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Bookmark } from '../types/bookmark';
 import { BookmarkCard } from './BookmarkCard';
 import { BookmarkX, Upload } from 'lucide-react';
@@ -11,7 +11,35 @@ interface MasonryGridProps {
   totalUnfilteredCount: number;
   onOpenImport: () => void;
   onClearFilters: () => void;
-  layoutMode?: 'masonry' | 'grid';
+}
+
+/**
+ * Hook to dynamically calculate column count based on viewport width,
+ * matching Tailwind breakpoints (sm: 640px, lg: 1024px, xl: 1280px, 2xl: 1536px).
+ */
+function useColumnCount(): number {
+  const getCount = () => {
+    if (typeof window === 'undefined') return 3;
+    const width = window.innerWidth;
+    if (width < 640) return 1;
+    if (width < 1024) return 2;
+    if (width < 1280) return 3;
+    if (width < 1536) return 4;
+    return 5;
+  };
+
+  const [columnCount, setColumnCount] = useState<number>(getCount);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setColumnCount(getCount());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return columnCount;
 }
 
 export const MasonryGrid: React.FC<MasonryGridProps> = ({
@@ -22,8 +50,9 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   totalUnfilteredCount,
   onOpenImport,
   onClearFilters,
-  layoutMode = 'masonry',
 }) => {
+  const columnCount = useColumnCount();
+
   // Empty state: No bookmarks imported yet
   if (totalUnfilteredCount === 0) {
     return (
@@ -67,37 +96,36 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
     );
   }
 
+  // Distribute items across columns round-robin to guarantee strict left-to-right ordering:
+  // Col 0: 0, N, 2N...
+  // Col 1: 1, N+1, 2N+1...
+  // Col 2: 2, N+2, 2N+2...
+  const columns = useMemo(() => {
+    const cols: Bookmark[][] = Array.from({ length: columnCount }, () => []);
+    bookmarks.forEach((bookmark, index) => {
+      cols[index % columnCount].push(bookmark);
+    });
+    return cols;
+  }, [bookmarks, columnCount]);
+
   return (
     <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
-      {layoutMode === 'masonry' ? (
-        /* The beloved interlocking masonry columns layout */
-        <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4 2xl:columns-5">
-          {bookmarks.map((bookmark) => (
-            <div key={bookmark.id} className="mb-4 break-inside-avoid">
+      {/* True Interlocking Masonry with strict Horizontal (Left-to-Right) Reading Order */}
+      <div className="flex gap-4 items-start">
+        {columns.map((colBookmarks, colIndex) => (
+          <div key={colIndex} className="flex-1 flex flex-col gap-4 min-w-0">
+            {colBookmarks.map((bookmark) => (
               <BookmarkCard
+                key={bookmark.id}
                 bookmark={bookmark}
                 onClick={onSelectBookmark}
                 onTagClick={onTagClick}
                 onDelete={onDeleteBookmark}
               />
-            </div>
-          ))}
-        </div>
-      ) : (
-        /* Horizontal row-by-row grid layout */
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 items-start">
-          {bookmarks.map((bookmark) => (
-            <div key={bookmark.id}>
-              <BookmarkCard
-                bookmark={bookmark}
-                onClick={onSelectBookmark}
-                onTagClick={onTagClick}
-                onDelete={onDeleteBookmark}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        ))}
+      </div>
     </main>
   );
 };
