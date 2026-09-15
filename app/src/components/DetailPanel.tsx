@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Bookmark } from '../types/bookmark';
 import { X, ExternalLink, Trash2, Tag, FileText, Calendar, User, Plus } from 'lucide-react';
+import { LinkifiedText } from './LinkifiedText';
 
 interface DetailPanelProps {
   bookmark: Bookmark | null;
@@ -159,7 +160,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
           {/* Full Tweet Text */}
           <div className="rounded border border-border bg-card p-4">
             <p className="text-xs leading-relaxed text-foreground select-text whitespace-pre-wrap font-normal">
-              {bookmark.text}
+              <LinkifiedText text={bookmark.text} />
             </p>
           </div>
 

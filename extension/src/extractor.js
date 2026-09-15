@@ -154,7 +154,10 @@ export function extractTweetData(article, options = {}) {
         text = fallbackTextEl.innerText || fallbackTextEl.textContent || '';
       }
     }
-    text = text.trim();
+    text = text
+      .replace(/\u00A0/g, ' ')
+      .replace(/(https?:\/\/)\s*(\r?\n)+\s*([a-zA-Z0-9_\-.~%+@]+)/gi, '$1$3')
+      .trim();
 
     // 5. Extract Media (Images & Video Posters)
     const media = [];

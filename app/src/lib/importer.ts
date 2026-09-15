@@ -1,4 +1,5 @@
 import { Bookmark, RawScrapedTweet, ImportResult } from '../types/bookmark';
+import { normalizeTweetText } from './linkify';
 
 /**
  * Validates, normalizes, and merges new scraped bookmarks into existing stored bookmarks.
@@ -60,7 +61,7 @@ export function parseAndDedupeBookmarks(
 
     const bookmark: Bookmark = {
       id: rawId,
-      text: typeof raw.text === 'string' ? raw.text : '',
+      text: typeof raw.text === 'string' ? normalizeTweetText(raw.text) : '',
       author_name: typeof raw.author_name === 'string' ? raw.author_name : '',
       author_handle: typeof raw.author_handle === 'string' ? raw.author_handle : '',
       avatar_url: typeof raw.avatar_url === 'string' ? raw.avatar_url : '',

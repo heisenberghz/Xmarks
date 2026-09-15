@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bookmark } from '../types/bookmark';
 import { ExternalLink, Trash2, Edit3, Image as ImageIcon, MessageSquare, User } from 'lucide-react';
+import { LinkifiedText } from './LinkifiedText';
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
@@ -108,7 +109,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
 
         {/* Tweet Body */}
         <div className="mt-2 text-xs leading-relaxed text-foreground/90 whitespace-pre-wrap select-text">
-          {displayText}
+          <LinkifiedText text={displayText} />
           {isLongText && (
             <button
               type="button"

@@ -166,7 +166,10 @@
         const fallbackTextEl = queryPrimary('div[lang]');
         if (fallbackTextEl) text = fallbackTextEl.innerText || fallbackTextEl.textContent || '';
       }
-      text = text.trim();
+      text = text
+        .replace(/\u00A0/g, ' ')
+        .replace(/(https?:\/\/)\s*(\r?\n)+\s*([a-zA-Z0-9_\-.~%+@]+)/gi, '$1$3')
+        .trim();
 
       // 4. Media
       const media = [];
