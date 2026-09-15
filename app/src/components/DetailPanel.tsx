@@ -126,9 +126,18 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
           {/* Author Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 border border-accent/30 text-accent font-bold text-xs">
-                <User className="h-4 w-4" />
-              </div>
+              {bookmark.avatar_url ? (
+                <img
+                  src={bookmark.avatar_url}
+                  alt={bookmark.author_name || bookmark.author_handle || ''}
+                  className="h-9 w-9 shrink-0 rounded-full border border-border/80 object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 border border-accent/30 text-accent font-bold text-xs">
+                  <User className="h-4 w-4" />
+                </div>
+              )}
               <div>
                 <div className="text-sm font-bold text-foreground leading-none">
                   {bookmark.author_name || bookmark.author_handle}

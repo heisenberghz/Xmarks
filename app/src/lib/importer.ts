@@ -63,6 +63,7 @@ export function parseAndDedupeBookmarks(
       text: typeof raw.text === 'string' ? raw.text : '',
       author_name: typeof raw.author_name === 'string' ? raw.author_name : '',
       author_handle: typeof raw.author_handle === 'string' ? raw.author_handle : '',
+      avatar_url: typeof raw.avatar_url === 'string' ? raw.avatar_url : '',
       timestamp: typeof raw.timestamp === 'string' && raw.timestamp ? raw.timestamp : nowIso,
       url: typeof raw.url === 'string' && raw.url ? raw.url : `https://x.com/i/status/${rawId}`,
       media: Array.isArray(raw.media) ? raw.media.filter((m): m is string => typeof m === 'string') : [],

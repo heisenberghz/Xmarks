@@ -29,6 +29,7 @@ describe('extractTweetData', () => {
     expect(result.id).toBe('1789012345678901234');
     expect(result.author_name).toBe('Guillermo Rauch');
     expect(result.author_handle).toBe('@rauchg');
+    expect(result.avatar_url).toBe('https://pbs.twimg.com/profile_images/1234567890/rauchg_normal.jpg');
     expect(result.timestamp).toBe('2026-05-10T14:30:00.000Z');
     expect(result.text).toBe('Shipping faster than ever with local-first tooling.');
     expect(result.url).toBe('https://x.com/rauchg/status/1789012345678901234');

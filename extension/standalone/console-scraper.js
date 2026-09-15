@@ -146,8 +146,15 @@
       if (!tweetId) return null;
 
       // 2. Author info
+      let avatarUrl = '';
       let authorName = '';
       let authorHandle = '';
+
+      // Avatar
+      const avatarImg = queryPrimary('img[src*="/profile_images/"]');
+      if (avatarImg) {
+        avatarUrl = avatarImg.getAttribute('src') || '';
+      }
       const userNameContainer = queryPrimary('[data-testid="User-Name"]');
       if (userNameContainer) {
         const allTextNodes = [];
@@ -222,6 +229,7 @@
         text: text,
         author_name: authorName,
         author_handle: authorHandle,
+        avatar_url: avatarUrl,
         timestamp: timestamp,
         url: tweetUrl || (authorHandle ? `https://x.com/${authorHandle.replace('@', '')}/status/${tweetId}` : `https://x.com/i/status/${tweetId}`),
         media: media

@@ -8,6 +8,7 @@ describe('Importer & Deduplication Engine', () => {
     text: 'Existing bookmark text',
     author_name: 'Existing Author',
     author_handle: '@existing',
+    avatar_url: 'https://pbs.twimg.com/profile_images/existing_normal.jpg',
     timestamp: '2026-05-01T00:00:00.000Z',
     url: 'https://x.com/existing/status/1001',
     media: [],

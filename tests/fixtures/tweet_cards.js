@@ -1,6 +1,7 @@
 export const simpleTweetHtml = `
 <article data-testid="tweet" role="article" tabindex="0">
   <div>
+    <img src="https://pbs.twimg.com/profile_images/1234567890/rauchg_normal.jpg" alt="Guillermo Rauch" />
     <div data-testid="User-Name">
       <div>
         <a href="/rauchg" role="link">

@@ -86,9 +86,16 @@ export function extractTweetData(article, options = {}) {
       return null;
     }
 
-    // 3. Extract Author Name and @Handle
+    // 3. Extract Author Avatar, Name and @Handle
+    let avatarUrl = '';
     let authorName = '';
     let authorHandle = '';
+
+    // Avatar: look for profile image (the one we intentionally exclude from tweet media)
+    const avatarImg = queryPrimary('img[src*="/profile_images/"]');
+    if (avatarImg) {
+      avatarUrl = avatarImg.getAttribute('src') || '';
+    }
 
     const userNameContainer = queryPrimary('[data-testid="User-Name"]');
     if (userNameContainer) {
@@ -179,6 +186,7 @@ export function extractTweetData(article, options = {}) {
       text: text,
       author_name: authorName,
       author_handle: authorHandle,
+      avatar_url: avatarUrl,
       timestamp: timestamp,
       url: tweetUrl || (authorHandle ? `https://x.com/${authorHandle.replace('@', '')}/status/${tweetId}` : `https://x.com/i/status/${tweetId}`),
       media: media

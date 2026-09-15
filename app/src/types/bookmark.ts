@@ -3,6 +3,7 @@ export interface Bookmark {
   text: string;
   author_name: string;
   author_handle: string;
+  avatar_url: string;      // author profile picture URL
   timestamp: string;       // ISO 8601
   url: string;
   media: string[];
@@ -16,6 +17,7 @@ export interface RawScrapedTweet {
   text?: string;
   author_name?: string;
   author_handle?: string;
+  avatar_url?: string;
   timestamp?: string;
   url?: string;
   media?: string[];

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Bookmark } from '../types/bookmark';
-import { ExternalLink, Trash2, Edit3, Image as ImageIcon, MessageSquare } from 'lucide-react';
+import { ExternalLink, Trash2, Edit3, Image as ImageIcon, MessageSquare, User } from 'lucide-react';
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
@@ -40,10 +40,23 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
       className="group relative flex flex-col justify-between break-inside-avoid rounded border border-border bg-card p-3.5 transition-all duration-150 hover:border-borderHover hover:bg-cardHover cursor-pointer shadow-sm"
     >
       <div>
-        {/* Header: Author & Timestamp */}
+        {/* Header: Avatar, Author & Timestamp */}
         <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5 overflow-hidden">
+          <div className="min-w-0 flex-1 flex items-center gap-2">
+            {/* Avatar */}
+            {bookmark.avatar_url ? (
+              <img
+                src={bookmark.avatar_url}
+                alt={bookmark.author_name || bookmark.author_handle || ''}
+                className="h-6 w-6 shrink-0 rounded-full border border-border/60 object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-panel border border-border text-muted">
+                <User className="h-3 w-3" />
+              </div>
+            )}
+            <div className="flex items-center gap-1.5 overflow-hidden min-w-0">
               <span className="truncate text-xs font-bold text-foreground hover:underline">
                 {bookmark.author_name || bookmark.author_handle || 'Unknown'}
               </span>
@@ -139,10 +152,10 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
         )}
       </div>
 
-      {/* Footer: Tag Chips */}
-      <div className="mt-3 flex flex-wrap items-center gap-1 border-t border-border/40 pt-2">
-        {bookmark.tags && bookmark.tags.length > 0 ? (
-          bookmark.tags.map((tag) => (
+      {/* Footer: Tag Chips (only shown when tags exist) */}
+      {bookmark.tags && bookmark.tags.length > 0 && (
+        <div className="mt-3 flex flex-wrap items-center gap-1 border-t border-border/40 pt-2">
+          {bookmark.tags.map((tag) => (
             <span
               key={tag}
               onClick={(e) => onTagClick(tag, e)}
@@ -150,11 +163,9 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
             >
               #{tag}
             </span>
-          ))
-        ) : (
-          <span className="text-[10px] text-muted/60 italic">+ add tags in details</span>
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </article>
   );
 };
