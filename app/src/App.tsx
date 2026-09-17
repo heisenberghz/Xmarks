@@ -13,6 +13,7 @@ import { MasonryGrid } from './components/MasonryGrid';
 import { DetailPanel } from './components/DetailPanel';
 import { ImportModal } from './components/ImportModal';
 import { DeleteDialog } from './components/DeleteDialog';
+import { Toaster, toast } from 'sonner';
 
 export const App: React.FC = () => {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -76,6 +77,7 @@ export const App: React.FC = () => {
     // Persist to IndexedDB
     await saveBookmarksBatchToDB(result.bookmarks);
     setBookmarks(result.bookmarks);
+    toast.success(`Imported ${result.added} new bookmarks (${result.skipped} duplicates skipped)`);
     return result;
   };
 
@@ -87,6 +89,7 @@ export const App: React.FC = () => {
     if (selectedBookmark?.id === updated.id) {
       setSelectedBookmark(updated);
     }
+    toast('Saved');
   }, [selectedBookmark]);
 
   const handlePromptDelete = (id: string, e?: React.MouseEvent) => {
@@ -102,6 +105,7 @@ export const App: React.FC = () => {
       setSelectedBookmark(null);
     }
     setDeleteTargetId(null);
+    toast('Bookmark removed from local storage');
   };
 
   if (isLoading) {
@@ -114,7 +118,7 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
       {/* Persistent Navigation Header */}
       <TopNav
         searchQuery={searchQuery}
@@ -167,6 +171,20 @@ export const App: React.FC = () => {
         isOpen={!!deleteTargetId}
         onClose={() => setDeleteTargetId(null)}
         onConfirm={handleConfirmDelete}
+      />
+
+      {/* Toast Notification Provider */}
+      <Toaster
+        theme="dark"
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: '#1c1c21',
+            border: '1px solid #2a2a30',
+            color: '#ececf0',
+            fontFamily: 'Inter Variable, system-ui, sans-serif',
+          },
+        }}
       />
     </div>
   );
