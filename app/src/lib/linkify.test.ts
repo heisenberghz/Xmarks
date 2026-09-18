@@ -43,4 +43,24 @@ describe('Linkify & URL Normalization', () => {
     expect(linkToken?.content).toBe('opensourceui.in');
     expect(linkToken?.url).toBe('https://opensourceui.in');
   });
+
+  it('heals URL paths split across newlines (like Marcel card case)', () => {
+    const text = 'with two skills:\nskills.sh/jakubkrehel/sk\nills/better-ui\n...';
+    const tokens = tokenizeTextWithLinks(text);
+
+    const linkToken = tokens.find((t) => t.type === 'link');
+    expect(linkToken).toBeDefined();
+    expect(linkToken?.content).toBe('skills.sh/jakubkrehel/skills/better-ui');
+    expect(linkToken?.url).toBe('https://skills.sh/jakubkrehel/skills/better-ui');
+  });
+
+  it('heals URL paths ending in slash before newline', () => {
+    const text = 'Check docs at https://docs.example.com/api/\nv1/endpoints';
+    const tokens = tokenizeTextWithLinks(text);
+
+    const linkToken = tokens.find((t) => t.type === 'link');
+    expect(linkToken).toBeDefined();
+    expect(linkToken?.content).toBe('https://docs.example.com/api/v1/endpoints');
+    expect(linkToken?.url).toBe('https://docs.example.com/api/v1/endpoints');
+  });
 });
