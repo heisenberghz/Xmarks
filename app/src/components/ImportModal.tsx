@@ -79,26 +79,26 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative w-full max-w-md rounded-lg border border-border bg-panel p-6 shadow-2xl"
+            className="relative w-full max-w-md rounded-xl border border-white/[0.08] bg-panel p-6 shadow-2xl"
           >
             {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-border">
+            <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.08]">
               <div className="flex items-center gap-2">
-                <FileJson className="h-4 w-4 text-accent" />
-                <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-                  Import Bookmarks
+                <FileJson className="h-4 w-4 text-teal-400" />
+                <h3 className="text-sm font-semibold tracking-tight text-foreground">
+                  Import Bookmarks JSON
                 </h3>
               </div>
               <button
                 onClick={handleClose}
-                className="rounded-md p-1 text-muted hover:bg-card hover:text-foreground transition-colors"
+                className="rounded-lg p-1 text-muted hover:bg-white/[0.06] hover:text-foreground transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -114,10 +114,10 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
                     onClick={() => fileInputRef.current?.click()}
-                    className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 text-center cursor-pointer transition-colors ${
+                    className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center cursor-pointer transition-all ${
                       isDragging
-                        ? 'border-accent bg-accent/10'
-                        : 'border-border bg-card hover:border-borderHover hover:bg-cardHover'
+                        ? 'border-teal-500 bg-teal-500/[0.08]'
+                        : 'border-white/[0.1] bg-white/[0.02] hover:border-white/[0.2] hover:bg-white/[0.04]'
                     }`}
                   >
                     <input
@@ -128,48 +128,48 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                       className="hidden"
                     />
                     <UploadCloud
-                      className={`h-10 w-10 mb-2 ${
-                        isDragging ? 'text-accent' : 'text-muted'
+                      className={`h-10 w-10 mb-2.5 transition-colors ${
+                        isDragging ? 'text-teal-400' : 'text-muted/70'
                       }`}
                     />
                     <p className="text-xs font-semibold text-foreground">
                       Click to choose file or drag and drop
                     </p>
-                    <p className="mt-1 text-[11px] text-muted">
-                      Select <code className="text-accent">bookmarks-export-*.json</code>
+                    <p className="mt-1 text-[11px] text-muted font-mono">
+                      Accepts bookmarks-export-*.json
                     </p>
                   </div>
 
                   {isLoading && (
                     <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted">
-                      <span className="h-3 w-3 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+                      <span className="h-3 w-3 animate-spin rounded-full border-2 border-teal-400 border-t-transparent" />
                       <span>Ingesting and deduplicating bookmarks...</span>
                     </div>
                   )}
 
                   {error && (
-                    <div className="mt-4 flex items-start gap-2 rounded-md bg-red-950/40 p-3 text-xs text-red-400 border border-red-800/40">
+                    <div className="mt-4 flex items-start gap-2 rounded-lg bg-rose-500/10 p-3 text-xs text-rose-400 border border-rose-500/20">
                       <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                       <span>{error}</span>
                     </div>
                   )}
                 </div>
               ) : (
-                /* Import Summary per Section 5.3 */
+                /* Import Summary */
                 <div className="py-2 space-y-4">
-                  <div className="flex items-center gap-2 text-emerald-400">
+                  <div className="flex items-center gap-2 text-teal-400">
                     <CheckCircle2 className="h-5 w-5" />
-                    <span className="text-sm font-bold">Import Successful</span>
+                    <span className="text-sm font-semibold">Import Complete</span>
                   </div>
 
-                  <div className="rounded-lg border border-border bg-card p-3 space-y-2 text-xs">
+                  <div className="rounded-xl border border-white/[0.08] bg-card p-3.5 space-y-2 text-xs">
                     <div className="flex justify-between">
-                      <span className="text-muted">Total records in file:</span>
+                      <span className="text-muted">Total records parsed:</span>
                       <span className="font-mono font-semibold text-foreground">
                         {result.totalParsed}
                       </span>
                     </div>
-                    <div className="flex justify-between text-emerald-400">
+                    <div className="flex justify-between text-teal-400">
                       <span>New bookmarks added:</span>
                       <span className="font-mono font-semibold">+{result.added}</span>
                     </div>
@@ -181,7 +181,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
                   <button
                     onClick={handleClose}
-                    className="w-full rounded-md bg-accent py-2 text-xs font-semibold text-white hover:bg-accent-hover transition-colors"
+                    className="w-full rounded-lg bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 py-2 text-xs font-medium transition-all"
                   >
                     Done
                   </button>

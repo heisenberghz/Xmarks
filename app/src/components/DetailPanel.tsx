@@ -98,7 +98,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-black/60"
+            className="absolute inset-0 bg-black/70 backdrop-blur-xs"
             onClick={onClose}
           />
 
@@ -108,15 +108,15 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative z-10 flex h-full w-full max-w-xl flex-col border-l border-border bg-panel shadow-2xl"
+            className="relative z-10 flex h-full w-full max-w-xl flex-col border-l border-white/[0.08] bg-panel shadow-2xl"
           >
             {/* Drawer Header */}
-            <div className="flex items-center justify-between border-b border-border px-5 py-3.5 bg-card">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
-                  Bookmark Detail
+            <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-4 bg-card shadow-xs">
+              <div className="flex items-center gap-2.5">
+                <span className="text-[11px] font-mono font-semibold uppercase text-teal-400 tracking-wider">
+                  Bookmark Details
                 </span>
-                <span className="text-[10px] text-muted font-mono">ID: {bookmark.id}</span>
+                <span className="text-[10px] text-muted/60 font-mono">#{bookmark.id}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -124,14 +124,15 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                   href={bookmark.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 rounded-md bg-panel px-2.5 py-1 text-xs font-semibold text-accent border border-border hover:border-accent transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg bg-white/[0.05] px-3 py-1.5 text-xs font-medium text-teal-400 border border-teal-500/20 hover:border-teal-500/40 hover:bg-teal-500/10 transition-all shadow-xs"
                 >
-                  <span>View on X</span>
+                  <span>Open on X</span>
                   <ExternalLink className="h-3 w-3" />
                 </a>
                 <button
                   onClick={onClose}
-                  className="rounded-md p-1 text-muted hover:bg-panel hover:text-foreground transition-colors"
+                  className="rounded-lg p-1.5 text-muted hover:bg-white/[0.06] hover:text-foreground transition-colors"
+                  title="Close panel"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -139,62 +140,62 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
             </div>
 
             {/* Drawer Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-5 no-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
               {/* Author Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
+              <div className="flex items-start justify-between gap-3 pb-2 border-b border-white/[0.06]">
+                <div className="flex items-center gap-3">
                   {bookmark.avatar_url ? (
                     <img
                       src={bookmark.avatar_url}
                       alt={bookmark.author_name || bookmark.author_handle || ''}
-                      className="h-9 w-9 shrink-0 rounded-full border border-border object-cover"
+                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/10"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-panel border border-border text-muted">
-                      <User className="h-4 w-4" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.05] ring-1 ring-white/10 text-muted">
+                      <User className="h-5 w-5" />
                     </div>
                   )}
                   <div>
-                    <div className="text-sm font-bold text-foreground leading-none">
+                    <div className="text-sm font-semibold text-foreground tracking-tight leading-snug">
                       {bookmark.author_name || bookmark.author_handle}
                     </div>
                     {bookmark.author_handle && (
-                      <div className="text-xs text-muted font-mono mt-1">
+                      <div className="text-xs text-muted font-mono mt-0.5">
                         {bookmark.author_handle}
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-xs text-muted font-mono">
-                  <Calendar className="h-3.5 w-3.5" />
+                <div className="flex items-center gap-1.5 text-xs text-muted/80 font-mono pt-1">
+                  <Calendar className="h-3.5 w-3.5 text-muted/60" />
                   <span>{formatDate(bookmark.timestamp)}</span>
                 </div>
               </div>
 
               {/* Full Tweet Text */}
-              <div className="rounded-lg border border-border bg-card p-4">
-                <p className="text-[13px] leading-relaxed text-foreground select-text whitespace-pre-wrap font-normal">
+              <div className="rounded-xl border border-white/[0.08] bg-card p-4.5 shadow-card">
+                <p className="text-[14px] leading-[1.65] text-foreground/95 select-text whitespace-pre-wrap font-normal tracking-[-0.005em]">
                   <LinkifiedText text={bookmark.text} />
                 </p>
               </div>
 
               {/* Media Previews */}
               {bookmark.media && bookmark.media.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="text-[11px] font-bold uppercase tracking-wider text-muted">
-                    Media ({bookmark.media.length})
+                <div className="space-y-2.5">
+                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted/80">
+                    Attachments ({bookmark.media.length})
                   </h4>
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="grid grid-cols-1 gap-2.5">
                     {bookmark.media.map((src, index) => (
                       <div
                         key={index}
-                        className="overflow-hidden rounded-lg border border-border bg-black/50"
+                        className="overflow-hidden rounded-xl border border-white/[0.08] bg-black/40"
                       >
                         <img
                           src={src}
-                          alt={`Tweet attachment ${index + 1}`}
+                          alt={`Attachment ${index + 1}`}
                           className="max-h-96 w-full object-contain mx-auto"
                           loading="lazy"
                         />
@@ -205,9 +206,9 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
               )}
 
               {/* Tag Editor Section */}
-              <div className="rounded-lg border border-border bg-card p-4 space-y-3">
-                <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
-                  <Tag className="h-3.5 w-3.5 text-accent" />
+              <div className="rounded-xl border border-white/[0.08] bg-card p-4.5 space-y-3.5 shadow-card">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-foreground">
+                  <Tag className="h-3.5 w-3.5 text-teal-400" />
                   <span>Tags</span>
                 </div>
 
@@ -218,12 +219,13 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                     return (
                       <span
                         key={tag}
-                        className={`flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-semibold border ${color.bg} ${color.text} ${color.border}`}
+                        className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium border ${color.bg} ${color.text} ${color.border}`}
                       >
                         <span>#{tag}</span>
                         <button
                           onClick={() => handleRemoveTag(tag)}
                           className="hover:opacity-75 transition-opacity"
+                          title={`Remove #${tag}`}
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -231,7 +233,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                     );
                   })}
                   {tags.length === 0 && (
-                    <span className="text-xs text-muted italic">No tags assigned.</span>
+                    <span className="text-xs text-muted/60 italic">No tags assigned yet.</span>
                   )}
                 </div>
 
@@ -247,13 +249,13 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                         handleAddTag(newTagInput);
                       }
                     }}
-                    placeholder="Type tag and press Enter..."
-                    className="flex-1 rounded-md border border-border bg-panel px-3 py-1.5 text-xs text-foreground placeholder:text-muted focus:border-accent focus:outline-none"
+                    placeholder="Add tag and press Enter..."
+                    className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3.5 py-2 text-xs text-foreground placeholder:text-muted/60 focus:border-teal-500/50 focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-teal-500/30 transition-all font-normal"
                   />
                   <button
                     onClick={() => handleAddTag(newTagInput)}
                     disabled={!newTagInput.trim()}
-                    className="flex items-center gap-1 rounded-md bg-accent px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-40 transition-colors hover:bg-accent-hover"
+                    className="flex items-center gap-1.5 rounded-lg bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 px-3.5 py-2 text-xs font-medium disabled:opacity-30 transition-all active:scale-95"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     <span>Add</span>
@@ -263,12 +265,12 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                 {/* Quick Suggestions */}
                 {suggestedTags.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-1 text-[11px] text-muted">
-                    <span className="text-[10px] uppercase font-mono mr-1">Suggested:</span>
+                    <span className="text-[10.5px] uppercase font-mono mr-1 text-muted/70">Suggestions:</span>
                     {suggestedTags.map((st) => (
                       <button
                         key={st}
                         onClick={() => handleAddTag(st)}
-                        className="rounded bg-panel px-1.5 py-0.5 text-[10px] text-muted hover:text-accent hover:border-accent border border-border transition-colors"
+                        className="rounded px-2 py-0.5 text-[10.5px] text-muted hover:text-teal-300 hover:border-teal-500/30 border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
                       >
                         +{st}
                       </button>
@@ -278,13 +280,13 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
               </div>
 
               {/* Personal Notes Editor Section */}
-              <div className="rounded-lg border border-border bg-card p-4 space-y-2">
+              <div className="rounded-xl border border-white/[0.08] bg-card p-4.5 space-y-2.5 shadow-card">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
-                    <FileText className="h-3.5 w-3.5 text-accent" />
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-foreground">
+                    <FileText className="h-3.5 w-3.5 text-teal-400" />
                     <span>Personal Notes</span>
                   </div>
-                  <span className="text-[10px] text-muted font-mono">Auto-saved on blur</span>
+                  <span className="text-[10.5px] text-muted/60 font-mono">Saved automatically on blur</span>
                 </div>
 
                 <textarea
@@ -292,27 +294,27 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                   onChange={(e) => handleNotesChange(e.target.value)}
                   onBlur={handleNotesBlur}
                   rows={4}
-                  placeholder="Add personal notes, thoughts, or why you saved this..."
-                  className="w-full rounded-md border border-border bg-panel p-2.5 text-xs text-foreground placeholder:text-muted/70 focus:border-accent focus:outline-none resize-y leading-relaxed"
+                  placeholder="Record insights, context, action items, or why you saved this tweet..."
+                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-3 text-xs text-foreground placeholder:text-muted/60 focus:border-teal-500/50 focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-teal-500/30 resize-y leading-relaxed font-normal transition-all"
                 />
               </div>
             </div>
 
             {/* Drawer Footer: Delete Bookmark */}
-            <div className="border-t border-border bg-card px-5 py-3 flex items-center justify-between">
+            <div className="border-t border-white/[0.08] bg-card px-6 py-3.5 flex items-center justify-between shadow-xs">
               <button
                 onClick={() => onDeleteBookmark(bookmark.id)}
-                className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-950/40 hover:text-red-300 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-500/10 border border-rose-500/20 hover:border-rose-500/40 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
-                <span>Remove Bookmark</span>
+                <span>Remove from storage</span>
               </button>
 
               <button
                 onClick={onClose}
-                className="rounded-md border border-border bg-panel px-3 py-1.5 text-xs font-medium text-foreground hover:bg-card transition-colors"
+                className="rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-1.5 text-xs font-medium text-foreground hover:bg-white/[0.08] transition-colors"
               >
-                Close
+                Done
               </button>
             </div>
           </motion.aside>

@@ -39,53 +39,56 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
   return (
     <article
       onClick={() => onClick(bookmark)}
-      className="group relative flex flex-col justify-between break-inside-avoid rounded-lg border border-border bg-card p-4 transition-colors duration-200 hover:border-accent/30 hover:bg-cardHover cursor-pointer"
+      className="group relative flex flex-col justify-between break-inside-avoid rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:border-borderHover hover:bg-cardHover shadow-card hover:shadow-card-hover cursor-pointer select-none"
     >
       <div>
-        {/* Header: Avatar, Author & Timestamp */}
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0 flex-1 flex items-center gap-2">
+        {/* Header: Avatar, Stacked Author Info & Timestamp */}
+        <div className="flex items-start justify-between gap-2.5">
+          <div className="min-w-0 flex-1 flex items-center gap-2.5">
             {/* Avatar */}
             {bookmark.avatar_url ? (
               <img
                 src={bookmark.avatar_url}
                 alt={bookmark.author_name || bookmark.author_handle || ''}
-                className="h-7 w-7 shrink-0 rounded-full border border-border object-cover"
+                className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-white/10"
                 loading="lazy"
               />
             ) : (
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-panel border border-border text-muted">
-                <User className="h-3.5 w-3.5" />
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.04] ring-1 ring-white/10 text-muted">
+                <User className="h-4 w-4" />
               </div>
             )}
-            <div className="flex items-center gap-1.5 overflow-hidden min-w-0">
-              <span className="truncate text-[13px] font-bold text-foreground">
+            
+            {/* Author Name + Handle stacked vertically to eliminate truncation */}
+            <div className="min-w-0 flex-1 flex flex-col justify-center">
+              <span className="truncate text-[13.5px] font-semibold text-foreground tracking-tight leading-snug">
                 {bookmark.author_name || bookmark.author_handle || 'Unknown'}
               </span>
               {bookmark.author_handle && (
-                <span className="truncate text-xs text-muted">
+                <span className="truncate text-[11px] text-muted/75 font-mono leading-tight">
                   {bookmark.author_handle}
                 </span>
               )}
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2">
-            <time className="text-[10px] text-muted font-mono" title={bookmark.timestamp}>
+          {/* Right Header: Timestamp & Hover Actions */}
+          <div className="flex shrink-0 items-center gap-1.5 pt-0.5">
+            <time className="text-[11px] text-muted/70 font-mono tracking-tight" title={bookmark.timestamp}>
               {formatDate(bookmark.timestamp)}
             </time>
 
             {/* Quick Actions Hover Palette */}
-            <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="flex items-center gap-0.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
               <a
                 href={bookmark.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 title="Open on X"
-                className="rounded-md p-1 text-muted hover:bg-panel hover:text-accent transition-colors"
+                className="rounded p-1 text-muted/80 hover:bg-white/[0.08] hover:text-foreground transition-colors"
               >
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="h-3.5 w-3.5" />
               </a>
               <button
                 onClick={(e) => {
@@ -93,17 +96,17 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
                   onDelete(bookmark.id, e);
                 }}
                 title="Remove bookmark"
-                className="rounded-md p-1 text-muted hover:bg-red-950/50 hover:text-red-400 transition-colors"
+                className="rounded p-1 text-muted/80 hover:bg-red-500/15 hover:text-red-400 transition-colors"
               >
-                <Trash2 className="h-3 w-3" />
+                <Trash2 className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
         </div>
 
         {/* Tweet Text */}
-        <div className="mt-2.5">
-          <p className="text-[13px] leading-relaxed text-foreground/90 select-text whitespace-pre-wrap">
+        <div className="mt-3">
+          <p className="text-[13.5px] leading-[1.6] text-foreground/90 select-text whitespace-pre-wrap font-normal tracking-[-0.005em]">
             <LinkifiedText text={displayText} />
           </p>
           {isLongText && (
@@ -112,26 +115,26 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
                 e.stopPropagation();
                 setIsExpanded(!isExpanded);
               }}
-              className="mt-1 text-xs font-medium text-accent hover:text-accent-hover transition-colors"
+              className="mt-1.5 inline-block text-[11.5px] font-semibold text-teal-400 hover:text-teal-300 transition-colors"
             >
               {isExpanded ? 'Show less' : 'Show more'}
             </button>
           )}
         </div>
 
-        {/* Compact Media Thumbnail */}
+        {/* Media Thumbnail Container with proper sizing & eye-comfort containment */}
         {bookmark.media && bookmark.media.length > 0 && (
-          <div className="mt-2.5 overflow-hidden rounded-md border border-border bg-black/40">
-            <div className="relative aspect-[16/9] w-full overflow-hidden">
+          <div className="mt-3 overflow-hidden rounded-lg border border-white/[0.08] bg-black/40">
+            <div className="relative w-full overflow-hidden max-h-72">
               <img
                 src={bookmark.media[0]}
                 alt="Tweet media"
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+                className="w-full h-auto max-h-72 object-cover brightness-[0.96] transition-all duration-300 group-hover:scale-[1.01] group-hover:brightness-100"
               />
               {bookmark.media.length > 1 && (
-                <div className="absolute bottom-1.5 right-1.5 flex items-center gap-1 rounded-sm bg-black/75 px-1.5 py-0.5 text-[9px] font-mono font-medium text-white">
-                  <ImageIcon className="h-2.5 w-2.5" />
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded bg-black/80 px-2 py-0.5 text-[10px] font-mono font-medium text-white/90 border border-white/10 backdrop-blur-xs">
+                  <ImageIcon className="h-3 w-3" />
                   <span>+{bookmark.media.length - 1}</span>
                 </div>
               )}
@@ -139,25 +142,25 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
           </div>
         )}
 
-        {/* User Notes Preview Badge */}
+        {/* Personal Notes Preview */}
         {bookmark.notes && (
-          <div className="mt-2 flex items-start gap-1 rounded-md bg-panel px-2 py-1 text-[11px] text-muted border border-border/60">
-            <MessageSquare className="h-3 w-3 shrink-0 mt-0.5 text-accent/80" />
-            <span className="line-clamp-2 italic text-foreground/80">{bookmark.notes}</span>
+          <div className="mt-3 flex items-start gap-2 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-[11.5px] text-muted border border-white/[0.06]">
+            <MessageSquare className="h-3.5 w-3.5 shrink-0 mt-0.5 text-teal-400/80" />
+            <span className="line-clamp-2 italic text-foreground/80 leading-relaxed">{bookmark.notes}</span>
           </div>
         )}
       </div>
 
-      {/* Footer: Tag Chips (only shown when tags exist) */}
+      {/* Footer: Tag Chips */}
       {bookmark.tags && bookmark.tags.length > 0 && (
-        <div className="mt-3 flex flex-wrap items-center gap-1 border-t border-border/40 pt-2">
+        <div className="mt-3.5 flex flex-wrap items-center gap-1.5 border-t border-white/[0.06] pt-2.5">
           {bookmark.tags.map((tag) => {
             const color = getTagColor(tag);
             return (
               <span
                 key={tag}
                 onClick={(e) => onTagClick(tag, e)}
-                className={`rounded-sm px-1.5 py-0.5 text-[10px] font-semibold border transition-colors cursor-pointer hover:brightness-125 ${color.bg} ${color.text} ${color.border}`}
+                className={`rounded px-2 py-0.5 text-[11px] font-medium border transition-colors cursor-pointer hover:brightness-125 ${color.bg} ${color.text} ${color.border}`}
               >
                 #{tag}
               </span>
