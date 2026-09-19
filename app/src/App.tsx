@@ -27,7 +27,6 @@ export const App: React.FC = () => {
   const [isClearAllOpen, setIsClearAllOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'grid' | 'feed'>('grid');
   const [sortMode, setSortMode] = useState<SortMode>('bookmarked');
 
   // Load from IndexedDB on startup
@@ -178,13 +177,11 @@ export const App: React.FC = () => {
         filteredCount={filteredBookmarks.length}
         onOpenImport={() => setIsImportOpen(true)}
         onOpenClearAll={() => setIsClearAllOpen(true)}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
         sortMode={sortMode}
         onSortModeChange={setSortMode}
       />
 
-      {/* Main Content Area (supports Masonry Grid & Linear Feed modes) */}
+      {/* Main Content Area (Interlocking Masonry Grid) */}
       <MasonryGrid
         bookmarks={filteredBookmarks}
         onSelectBookmark={setSelectedBookmark}
@@ -196,7 +193,6 @@ export const App: React.FC = () => {
           setSearchQuery('');
           setSelectedTags([]);
         }}
-        viewMode={viewMode}
         selectedBookmarkId={selectedBookmark?.id}
       />
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Upload, X, Tag as TagIcon, LayoutGrid, Rows3, ArrowUpDown, Check, Trash2 } from 'lucide-react';
+import { Search, Upload, X, Tag as TagIcon, ArrowUpDown, Check, Trash2 } from 'lucide-react';
 import { SortMode } from '../types/bookmark';
 
 interface TopNavProps {
@@ -15,8 +15,6 @@ interface TopNavProps {
   filteredCount: number;
   onOpenImport: () => void;
   onOpenClearAll?: () => void;
-  viewMode: 'grid' | 'feed';
-  onViewModeChange: (mode: 'grid' | 'feed') => void;
   sortMode: SortMode;
   onSortModeChange: (mode: SortMode) => void;
 }
@@ -52,8 +50,6 @@ export const TopNav: React.FC<TopNavProps> = ({
   filteredCount,
   onOpenImport,
   onOpenClearAll,
-  viewMode,
-  onViewModeChange,
   sortMode,
   onSortModeChange,
 }) => {
@@ -199,34 +195,6 @@ export const TopNav: React.FC<TopNavProps> = ({
               )}
             </div>
 
-            {/* View Mode Toggle: Grid vs Feed */}
-            <div className="flex items-center rounded border border-border bg-panel p-0.5">
-              <button
-                onClick={() => onViewModeChange('grid')}
-                className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors ${
-                  viewMode === 'grid'
-                    ? 'bg-card text-foreground border border-border/80'
-                    : 'text-muted hover:text-foreground hover:bg-cardHover'
-                }`}
-                title="Masonry Grid View"
-              >
-                <LayoutGrid className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline text-[11px]">Grid</span>
-              </button>
-
-              <button
-                onClick={() => onViewModeChange('feed')}
-                className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors ${
-                  viewMode === 'feed'
-                    ? 'bg-card text-foreground border border-border/80'
-                    : 'text-muted hover:text-foreground hover:bg-cardHover'
-                }`}
-                title="Linear Feed View"
-              >
-                <Rows3 className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline text-[11px]">Feed</span>
-              </button>
-            </div>
 
             {/* Flat Solid Import Action */}
             <button

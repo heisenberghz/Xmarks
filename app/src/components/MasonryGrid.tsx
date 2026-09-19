@@ -12,8 +12,6 @@ interface MasonryGridProps {
   totalUnfilteredCount: number;
   onOpenImport: () => void;
   onClearFilters: () => void;
-  viewMode?: 'grid' | 'feed';
-
   selectedBookmarkId?: string | null;
 }
 
@@ -54,7 +52,6 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   totalUnfilteredCount,
   onOpenImport,
   onClearFilters,
-  viewMode = 'grid',
   selectedBookmarkId,
 }) => {
   const columnCount = useColumnCount();
@@ -115,59 +112,33 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
 
   return (
     <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
-      {viewMode === 'feed' ? (
-        /* Linear Feed View: Calm, focused, uniform alignment */
-        <div className="mx-auto max-w-2xl flex flex-col gap-4">
-          {bookmarks.map((bookmark, index) => (
-            <motion.div
-              key={bookmark.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.18,
-                delay: Math.min(index * 0.02, 0.25),
-                ease: [0.25, 0.1, 0.25, 1],
-              }}
-            >
-              <BookmarkCard
-                bookmark={bookmark}
-                onClick={onSelectBookmark}
-                onTagClick={onTagClick}
-                onDelete={onDeleteBookmark}
-                isSelected={selectedBookmarkId === bookmark.id}
-              />
-            </motion.div>
-          ))}
-        </div>
-      ) : (
-        /* Interlocking Masonry Grid View */
-        <div className="flex gap-4 items-start">
-          {columns.map((colBookmarks, colIndex) => (
-            <div key={colIndex} className="flex-1 flex flex-col gap-4 min-w-0">
-              {colBookmarks.map((bookmark, itemIndex) => (
-                <motion.div
-                  key={bookmark.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.18,
-                    delay: Math.min((colIndex + itemIndex * columnCount) * 0.02, 0.25),
-                    ease: [0.25, 0.1, 0.25, 1],
-                  }}
-                >
-                  <BookmarkCard
-                    bookmark={bookmark}
-                    onClick={onSelectBookmark}
-                    onTagClick={onTagClick}
-                    onDelete={onDeleteBookmark}
-                    isSelected={selectedBookmarkId === bookmark.id}
-                  />
-                </motion.div>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Interlocking Masonry Grid View */}
+      <div className="flex gap-4 items-start">
+        {columns.map((colBookmarks, colIndex) => (
+          <div key={colIndex} className="flex-1 flex flex-col gap-4 min-w-0">
+            {colBookmarks.map((bookmark, itemIndex) => (
+              <motion.div
+                key={bookmark.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.18,
+                  delay: Math.min((colIndex + itemIndex * columnCount) * 0.02, 0.25),
+                  ease: [0.25, 0.1, 0.25, 1],
+                }}
+              >
+                <BookmarkCard
+                  bookmark={bookmark}
+                  onClick={onSelectBookmark}
+                  onTagClick={onTagClick}
+                  onDelete={onDeleteBookmark}
+                  isSelected={selectedBookmarkId === bookmark.id}
+                />
+              </motion.div>
+            ))}
+          </div>
+        ))}
+      </div>
     </main>
   );
 };
