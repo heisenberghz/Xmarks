@@ -53,8 +53,8 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
       onClick={() => onClick(bookmark)}
       className={`group relative flex flex-col justify-between break-inside-avoid rounded-lg border bg-card p-4 transition-colors duration-150 cursor-pointer select-none ${
         isSelected
-          ? 'border-zinc-500 bg-zinc-800/80 ring-0'
-          : 'border-border hover:border-zinc-600 hover:bg-cardHover'
+          ? 'border-accent/60 bg-cardHover ring-0'
+          : 'border-border hover:border-borderHover hover:bg-cardHover'
       }`}
     >
       <div>
@@ -70,7 +70,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
                 loading="lazy"
               />
             ) : (
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-800 border border-border text-muted">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-panel border border-border text-muted">
                 <User className="h-4 w-4" />
               </div>
             )}
@@ -99,7 +99,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
               <button
                 onClick={handleCopyText}
                 title="Copy tweet text"
-                className="rounded p-1 text-muted hover:bg-zinc-800 hover:text-foreground transition-colors"
+                className="rounded p-1 text-muted hover:bg-panel hover:text-foreground transition-colors"
               >
                 {hasCopied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
               </button>
@@ -109,7 +109,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 title="Open on X"
-                className="rounded p-1 text-muted hover:bg-zinc-800 hover:text-foreground transition-colors"
+                className="rounded p-1 text-muted hover:bg-panel hover:text-foreground transition-colors"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
@@ -167,7 +167,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
 
         {/* Personal Notes Preview */}
         {bookmark.notes && (
-          <div className="mt-3 flex items-start gap-2 rounded-md bg-zinc-800/40 px-2.5 py-1.5 text-[11.5px] text-muted border border-border">
+          <div className="mt-3 flex items-start gap-2 rounded-md bg-panel/70 px-2.5 py-1.5 text-[11.5px] text-muted border border-border">
             <MessageSquare className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted" />
             <span className="line-clamp-2 italic text-foreground/80 leading-relaxed">{bookmark.notes}</span>
           </div>
@@ -183,7 +183,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
               <span
                 key={tag}
                 onClick={(e) => onTagClick(tag, e)}
-                className={`rounded px-2 py-0.5 text-[11px] font-medium border transition-colors cursor-pointer hover:bg-zinc-700 hover:text-white ${color.bg} ${color.text} ${color.border}`}
+                className={`rounded px-2 py-0.5 text-[11px] font-medium border transition-colors cursor-pointer hover:border-borderHover hover:text-foreground ${color.bg} ${color.text} ${color.border}`}
               >
                 #{tag}
               </span>

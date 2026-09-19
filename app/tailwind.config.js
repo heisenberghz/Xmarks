@@ -7,20 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#09090b', // Pure neutral zinc-950
-        panel: '#121215',       // Pure neutral zinc-925
-        card: '#18181b',        // Pure neutral zinc-900
-        cardHover: '#202024',   // Flat neutral hover fill
-        border: '#27272a',      // Pure neutral zinc-800 flat border (no glow)
-        borderHover: '#3f3f46', // Pure neutral zinc-700
+        background: '#07080a', // Pitch-dark obsidian base (subtle dark depth, not hard blue)
+        panel: '#0d0e12',       // Elevated dark panel
+        card: '#111216',        // Deep dark card surface
+        cardHover: '#16171d',   // Subtle dark hover fill
+        border: '#1b1c22',      // Hairline dark border
+        borderHover: '#282a33', // Active/hover border
         accent: {
-          DEFAULT: '#e4e4e7',   // Pure neutral zinc-200
-          hover: '#ffffff',     // White
-          subtle: '#27272a',    // Pure neutral zinc-800
+          DEFAULT: '#94a3b8',   // Refined cool steel slate (no saturated neon blue)
+          hover: '#cbd5e1',
+          subtle: 'rgba(148, 163, 184, 0.08)',
         },
-        muted: '#a1a1aa',       // Pure neutral zinc-400
-        foreground: '#fafafa',  // Pure neutral zinc-50
-        danger: '#ef4444',
+        muted: '#787f8f',       // Restrained cool slate text
+        foreground: '#f1f3f7',  // Crisp off-white
+        danger: '#f85149',
       },
       borderRadius: {
         DEFAULT: '6px',

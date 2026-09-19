@@ -250,12 +250,12 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                       }
                     }}
                     placeholder="Add tag and press Enter..."
-                    className="flex-1 rounded border border-border bg-zinc-900 px-3.5 py-2 text-xs text-foreground placeholder:text-muted focus:border-zinc-500 focus:outline-none focus:ring-0 transition-colors font-normal"
+                    className="flex-1 rounded border border-border bg-panel px-3.5 py-2 text-xs text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none focus:ring-0 transition-colors font-normal"
                   />
                   <button
                     onClick={() => handleAddTag(newTagInput)}
                     disabled={!newTagInput.trim()}
-                    className="flex items-center gap-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-foreground border border-border px-3.5 py-2 text-xs font-medium disabled:opacity-30 transition-colors"
+                    className="flex items-center gap-1.5 rounded bg-panel hover:bg-card text-foreground border border-border hover:border-borderHover px-3.5 py-2 text-xs font-medium disabled:opacity-30 transition-colors"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     <span>Add</span>
@@ -270,7 +270,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                       <button
                         key={st}
                         onClick={() => handleAddTag(st)}
-                        className="rounded px-2 py-0.5 text-[10.5px] text-muted hover:text-foreground hover:border-zinc-600 border border-border bg-zinc-900 hover:bg-zinc-800 transition-colors"
+                        className="rounded px-2 py-0.5 text-[10.5px] text-muted hover:text-foreground hover:border-borderHover border border-border bg-panel hover:bg-card transition-colors"
                       >
                         +{st}
                       </button>
@@ -295,7 +295,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                   onBlur={handleNotesBlur}
                   rows={4}
                   placeholder="Record insights, context, action items, or why you saved this tweet..."
-                  className="w-full rounded border border-border bg-zinc-900 p-3 text-xs text-foreground placeholder:text-muted focus:border-zinc-500 focus:outline-none focus:ring-0 resize-y leading-relaxed font-normal transition-colors"
+                  className="w-full rounded border border-border bg-panel p-3 text-xs text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none focus:ring-0 resize-y leading-relaxed font-normal transition-colors"
                 />
               </div>
             </div>
@@ -312,7 +312,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
 
               <button
                 onClick={onClose}
-                className="rounded border border-border bg-zinc-800 px-4 py-1.5 text-xs font-medium text-foreground hover:bg-zinc-700 transition-colors"
+                className="rounded border border-border bg-panel hover:bg-card px-4 py-1.5 text-xs font-medium text-foreground transition-colors"
               >
                 Done
               </button>

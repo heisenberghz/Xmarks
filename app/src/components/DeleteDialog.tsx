@@ -48,7 +48,7 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
             <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
               <button
                 onClick={onClose}
-                className="rounded border border-border bg-zinc-800 px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-zinc-700 transition-colors"
+                className="rounded border border-border bg-panel px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-card transition-colors"
               >
                 Cancel
               </button>

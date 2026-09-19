@@ -46,12 +46,12 @@ export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-zinc-300 hover:text-white bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 hover:border-zinc-600 px-2 py-0.5 rounded my-0.5 transition-colors no-underline cursor-pointer align-baseline select-text group/link"
+              className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-muted hover:text-foreground bg-card hover:bg-cardHover border border-border hover:border-borderHover px-2 py-0.5 rounded my-0.5 transition-colors no-underline cursor-pointer align-baseline select-text group/link"
               title={token.url}
             >
-              <Globe className="h-3 w-3 shrink-0 text-zinc-400 group-hover/link:text-zinc-200 transition-colors" />
+              <Globe className="h-3 w-3 shrink-0 text-muted group-hover/link:text-foreground transition-colors" />
               <span className="truncate max-w-[260px] font-medium">{display}</span>
-              <span className="text-[10px] text-zinc-500 font-sans select-none group-hover/link:text-white">↗</span>
+              <span className="text-[10px] text-muted font-sans select-none group-hover/link:text-accent">↗</span>
             </a>
           );
         }

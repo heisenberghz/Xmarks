@@ -116,8 +116,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                     onClick={() => fileInputRef.current?.click()}
                     className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8 text-center cursor-pointer transition-colors ${
                       isDragging
-                        ? 'border-zinc-400 bg-zinc-800/60'
-                        : 'border-border bg-zinc-900/60 hover:border-zinc-600 hover:bg-zinc-800/40'
+                        ? 'border-accent bg-card'
+                        : 'border-border bg-card/60 hover:border-borderHover hover:bg-card'
                     }`}
                   >
                     <input
@@ -129,7 +129,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                     />
                     <UploadCloud
                       className={`h-10 w-10 mb-2.5 transition-colors ${
-                        isDragging ? 'text-foreground' : 'text-muted'
+                        isDragging ? 'text-accent' : 'text-muted'
                       }`}
                     />
                     <p className="text-xs font-semibold text-foreground">
@@ -142,7 +142,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
                   {isLoading && (
                     <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted">
-                      <span className="h-3 w-3 animate-spin rounded-full border-2 border-zinc-400 border-t-transparent" />
+                      <span className="h-3 w-3 animate-spin rounded-full border-2 border-accent border-t-transparent" />
                       <span>Ingesting and deduplicating bookmarks...</span>
                     </div>
                   )}
@@ -181,7 +181,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
                   <button
                     onClick={handleClose}
-                    className="w-full rounded border border-border bg-zinc-800 hover:bg-zinc-700 py-2 text-xs font-medium text-foreground transition-colors"
+                    className="w-full rounded border border-border bg-panel hover:bg-card py-2 text-xs font-medium text-foreground transition-colors"
                   >
                     Done
                   </button>

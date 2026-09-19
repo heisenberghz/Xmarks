@@ -1,9 +1,9 @@
-// Flat solid neutral monochrome tag styling — zero warm tints, zero yellow, zero purple
+// Refined midnight slate tag styling — flat, solid, high-legibility, zero glow
 const TAG_STYLE = {
-  bg: 'bg-zinc-800/80',
-  text: 'text-zinc-300',
-  border: 'border-zinc-700',
-  dot: '#71717a',
+  bg: 'bg-cardHover',
+  text: 'text-slate-300',
+  border: 'border-border',
+  dot: '#64748b',
 };
 
 export function getTagColor(_tag?: string) {
