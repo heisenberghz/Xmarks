@@ -59,20 +59,31 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
 }) => {
   const columnCount = useColumnCount();
 
+  // Distribute items across columns round-robin to guarantee strict left-to-right ordering
+  // Always invoke hooks at the top level before any conditional returns
+  const columns = useMemo(() => {
+    if (!bookmarks || bookmarks.length === 0) return [];
+    const cols: Bookmark[][] = Array.from({ length: columnCount }, () => []);
+    bookmarks.forEach((bookmark, index) => {
+      cols[index % columnCount].push(bookmark);
+    });
+    return cols;
+  }, [bookmarks, columnCount]);
+
   // Empty state: No bookmarks imported yet
   if (totalUnfilteredCount === 0) {
     return (
       <div className="flex min-h-[55vh] flex-col items-center justify-center px-4 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-900 border border-border text-muted mb-4">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-panel border border-border text-muted mb-4">
           <Upload className="h-5 w-5 text-foreground" />
         </div>
         <h3 className="text-base font-semibold text-foreground">No bookmarks imported yet</h3>
         <p className="mt-1.5 max-w-sm text-xs text-muted leading-relaxed">
-          Import your <code className="text-foreground bg-zinc-900 px-1.5 py-0.5 rounded border border-border font-mono">bookmarks-export.json</code> from the scraper to start searching, browsing, and tagging.
+          Import your <code className="text-foreground bg-panel px-1.5 py-0.5 rounded border border-border font-mono">bookmarks-export.json</code> from the scraper to start searching, browsing, and tagging.
         </p>
         <button
           onClick={onOpenImport}
-          className="mt-5 flex items-center gap-2 rounded bg-zinc-800 hover:bg-zinc-700 border border-border px-4 py-2 text-xs font-medium text-foreground transition-colors active:scale-95"
+          className="mt-5 flex items-center gap-2 rounded bg-panel hover:bg-card border border-border hover:border-borderHover px-4 py-2 text-xs font-medium text-foreground transition-colors active:scale-95"
         >
           <Upload className="h-4 w-4" />
           <span>Import JSON File</span>
@@ -85,7 +96,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   if (bookmarks.length === 0) {
     return (
       <div className="flex min-h-[45vh] flex-col items-center justify-center px-4 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-900 border border-border text-muted mb-3">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-panel border border-border text-muted mb-3">
           <BookmarkX className="h-5 w-5 text-muted" />
         </div>
         <h3 className="text-sm font-semibold text-foreground">No matching bookmarks found</h3>
@@ -94,22 +105,13 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
         </p>
         <button
           onClick={onClearFilters}
-          className="mt-4 rounded border border-border bg-zinc-900 px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-zinc-800 transition-colors"
+          className="mt-4 rounded border border-border bg-panel px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-card transition-colors"
         >
           Reset Filters
         </button>
       </div>
     );
   }
-
-  // Distribute items across columns round-robin to guarantee strict left-to-right ordering
-  const columns = useMemo(() => {
-    const cols: Bookmark[][] = Array.from({ length: columnCount }, () => []);
-    bookmarks.forEach((bookmark, index) => {
-      cols[index % columnCount].push(bookmark);
-    });
-    return cols;
-  }, [bookmarks, columnCount]);
 
   return (
     <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
