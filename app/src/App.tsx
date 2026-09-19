@@ -93,6 +93,23 @@ export const App: React.FC = () => {
     toast('Saved');
   }, [selectedBookmark]);
 
+  const selectedIndex = useMemo(() => {
+    if (!selectedBookmark) return undefined;
+    const idx = filteredBookmarks.findIndex((b) => b.id === selectedBookmark.id);
+    return idx === -1 ? undefined : idx;
+  }, [filteredBookmarks, selectedBookmark]);
+
+  const handleNavigateBookmark = useCallback(
+    (direction: 'prev' | 'next') => {
+      if (selectedIndex === undefined) return;
+      const targetIndex = direction === 'prev' ? selectedIndex - 1 : selectedIndex + 1;
+      if (targetIndex >= 0 && targetIndex < filteredBookmarks.length) {
+        setSelectedBookmark(filteredBookmarks[targetIndex]);
+      }
+    },
+    [selectedIndex, filteredBookmarks]
+  );
+
   const handlePromptDelete = (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     setDeleteTargetId(id);
@@ -152,7 +169,6 @@ export const App: React.FC = () => {
           setSelectedTags([]);
         }}
         viewMode={viewMode}
-
         selectedBookmarkId={selectedBookmark?.id}
       />
 
@@ -163,6 +179,9 @@ export const App: React.FC = () => {
         onUpdateBookmark={handleUpdateBookmark}
         onDeleteBookmark={handlePromptDelete}
         allExistingTags={allTagNames}
+        currentIndex={selectedIndex}
+        totalCount={filteredBookmarks.length}
+        onNavigate={handleNavigateBookmark}
       />
 
       {/* File Import Modal */}
