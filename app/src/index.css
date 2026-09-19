@@ -6,8 +6,8 @@
 
 @layer base {
   body {
-    background-color: #090a0d;
-    color: #f0f2f5;
+    background-color: #0c0b0e;
+    color: #f5f2eb;
     font-family: 'Inter Variable', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -15,11 +15,11 @@
   }
 }
 
-/* Custom scrollbar — thin, unobtrusive hairline */
+/* Custom scrollbar — warm subtle amber-stone hairline */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.18); }
+::-webkit-scrollbar-thumb { background: rgba(245, 235, 220, 0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.3); }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {

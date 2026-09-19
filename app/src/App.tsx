@@ -179,9 +179,9 @@ export const App: React.FC = () => {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: '#14161c',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#f0f2f5',
+            background: '#17161c',
+            border: '1px solid rgba(245, 158, 11, 0.2)',
+            color: '#f5f2eb',
             fontFamily: 'Inter Variable, system-ui, sans-serif',
           },
         }}

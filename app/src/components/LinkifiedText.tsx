@@ -12,7 +12,7 @@ function formatDisplayUrl(content: string): string {
   clean = clean.replace(/\/+$/, '');
   
   // If the path is excessively long, truncate the middle nicely
-  if (clean.length > 34) {
+  if (clean.length > 32) {
     const slashIndex = clean.indexOf('/');
     if (slashIndex !== -1) {
       const domain = clean.slice(0, slashIndex);
@@ -23,9 +23,19 @@ function formatDisplayUrl(content: string): string {
         return `${domain}/…${lastPart}`;
       }
     }
-    return clean.slice(0, 32) + '…';
+    return clean.slice(0, 30) + '…';
   }
   return clean;
+}
+
+function getDomain(url: string): string {
+  try {
+    const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+    const parsed = new URL(fullUrl);
+    return parsed.hostname;
+  } catch {
+    return '';
+  }
 }
 
 export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
@@ -38,6 +48,9 @@ export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
       {tokens.map((token, index) => {
         if (token.type === 'link' && token.url) {
           const display = formatDisplayUrl(token.content);
+          const domain = getDomain(token.url);
+          const faviconUrl = domain ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=32` : '';
+
           return (
             <a
               key={index}
@@ -45,11 +58,22 @@ export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-baseline gap-1 font-mono text-[12px] text-teal-400 hover:text-teal-300 bg-teal-500/[0.08] hover:bg-teal-500/[0.15] border border-teal-500/20 hover:border-teal-500/40 px-1.5 py-0.5 rounded my-0.5 transition-all no-underline cursor-pointer align-baseline select-text"
+              className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-amber-300 hover:text-amber-200 bg-amber-500/[0.08] hover:bg-amber-500/[0.14] border border-amber-500/20 hover:border-amber-500/40 px-2 py-0.5 rounded my-0.5 transition-all no-underline cursor-pointer align-baseline select-text shadow-xs group/link"
               title={token.url}
             >
-              <span className="truncate max-w-[280px]">{display}</span>
-              <span className="text-[10px] text-teal-400/70 font-sans select-none">↗</span>
+              {faviconUrl && (
+                <img
+                  src={faviconUrl}
+                  alt=""
+                  className="h-3 w-3 rounded-xs shrink-0 opacity-80 group-hover/link:opacity-100 transition-opacity"
+                  loading="lazy"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              )}
+              <span className="truncate max-w-[260px] font-medium">{display}</span>
+              <span className="text-[10px] text-amber-400/60 font-sans select-none group-hover/link:text-amber-300">↗</span>
             </a>
           );
         }

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Bookmark } from '../types/bookmark';
-import { ExternalLink, Trash2, Image as ImageIcon, MessageSquare, User } from 'lucide-react';
+import { ExternalLink, Trash2, Image as ImageIcon, MessageSquare, User, Copy, Check, Clock } from 'lucide-react';
 import { LinkifiedText } from './LinkifiedText';
 import { getTagColor } from '../lib/tagColors';
+import { toast } from 'sonner';
 
 interface BookmarkCardProps {
   bookmark: Bookmark;
@@ -18,6 +19,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
   onDelete,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false);
 
   const formatDate = (isoString: string) => {
     try {
@@ -36,21 +38,33 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
   const isLongText = bookmark.text.length > 220;
   const displayText = !isExpanded && isLongText ? bookmark.text.slice(0, 220) + '...' : bookmark.text;
 
+  const handleCopyText = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(bookmark.text);
+    setHasCopied(true);
+    toast.success('Tweet text copied to clipboard');
+    setTimeout(() => setHasCopied(false), 2000);
+  };
+
+  const wordCount = bookmark.text.trim().split(/\s+/).filter(Boolean).length;
+  const hasMedia = bookmark.media && bookmark.media.length > 0;
+  const hasNotes = Boolean(bookmark.notes);
+
   return (
     <article
       onClick={() => onClick(bookmark)}
-      className="group relative flex flex-col justify-between break-inside-avoid rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:border-borderHover hover:bg-cardHover shadow-card hover:shadow-card-hover cursor-pointer select-none"
+      className="group relative flex flex-col justify-between break-inside-avoid rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:border-amber-500/30 hover:bg-cardHover shadow-card hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer select-none"
     >
       <div>
-        {/* Header: Avatar, Stacked Author Info & Timestamp */}
+        {/* Header: Avatar, Stacked Author Info, Timestamp & Hover Actions */}
         <div className="flex items-start justify-between gap-2.5">
           <div className="min-w-0 flex-1 flex items-center gap-2.5">
-            {/* Avatar */}
+            {/* Avatar with dual ring styling */}
             {bookmark.avatar_url ? (
               <img
                 src={bookmark.avatar_url}
                 alt={bookmark.author_name || bookmark.author_handle || ''}
-                className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-white/10"
+                className="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-amber-500/20 group-hover:ring-amber-500/40 transition-all"
                 loading="lazy"
               />
             ) : (
@@ -59,9 +73,9 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
               </div>
             )}
             
-            {/* Author Name + Handle stacked vertically to eliminate truncation */}
+            {/* Stacked Author Name + Handle */}
             <div className="min-w-0 flex-1 flex flex-col justify-center">
-              <span className="truncate text-[13.5px] font-semibold text-foreground tracking-tight leading-snug">
+              <span className="truncate text-[13.5px] font-semibold text-foreground tracking-[-0.01em] leading-snug">
                 {bookmark.author_name || bookmark.author_handle || 'Unknown'}
               </span>
               {bookmark.author_handle && (
@@ -72,7 +86,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
             </div>
           </div>
 
-          {/* Right Header: Timestamp & Hover Actions */}
+          {/* Timestamp & Hover Micro-Actions */}
           <div className="flex shrink-0 items-center gap-1.5 pt-0.5">
             <time className="text-[11px] text-muted/70 font-mono tracking-tight" title={bookmark.timestamp}>
               {formatDate(bookmark.timestamp)}
@@ -80,6 +94,13 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
 
             {/* Quick Actions Hover Palette */}
             <div className="flex items-center gap-0.5 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+              <button
+                onClick={handleCopyText}
+                title="Copy tweet text"
+                className="rounded p-1 text-muted/80 hover:bg-white/[0.08] hover:text-amber-300 transition-colors"
+              >
+                {hasCopied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+              </button>
               <a
                 href={bookmark.url}
                 target="_blank"
@@ -96,7 +117,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
                   onDelete(bookmark.id, e);
                 }}
                 title="Remove bookmark"
-                className="rounded p-1 text-muted/80 hover:bg-red-500/15 hover:text-red-400 transition-colors"
+                className="rounded p-1 text-muted/80 hover:bg-rose-500/15 hover:text-rose-300 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -104,9 +125,33 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
           </div>
         </div>
 
+        {/* Visual Metadata Badges (media, notes, read-time) */}
+        {(hasMedia || hasNotes || wordCount > 45) && (
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+            {hasMedia && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm bg-white/[0.03] border border-white/[0.06] text-[10px] font-mono text-muted/80">
+                <ImageIcon className="h-2.5 w-2.5 text-amber-400/80" />
+                <span>{bookmark.media!.length} {bookmark.media!.length === 1 ? 'media' : 'media'}</span>
+              </span>
+            )}
+            {hasNotes && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm bg-amber-500/[0.08] border border-amber-500/20 text-[10px] font-mono text-amber-300">
+                <MessageSquare className="h-2.5 w-2.5" />
+                <span>Note</span>
+              </span>
+            )}
+            {wordCount > 45 && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm bg-white/[0.02] border border-white/[0.05] text-[10px] font-mono text-muted/70">
+                <Clock className="h-2.5 w-2.5 text-muted/60" />
+                <span>~{Math.ceil(wordCount / 180)}m read</span>
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Tweet Text */}
-        <div className="mt-3">
-          <p className="text-[13.5px] leading-[1.6] text-foreground/90 select-text whitespace-pre-wrap font-normal tracking-[-0.005em]">
+        <div className="mt-2.5">
+          <p className="text-[13.5px] leading-[1.65] text-foreground/90 select-text whitespace-pre-wrap font-normal tracking-[-0.005em]">
             <LinkifiedText text={displayText} />
           </p>
           {isLongText && (
@@ -115,7 +160,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
                 e.stopPropagation();
                 setIsExpanded(!isExpanded);
               }}
-              className="mt-1.5 inline-block text-[11.5px] font-semibold text-teal-400 hover:text-teal-300 transition-colors"
+              className="mt-1.5 inline-block text-[11.5px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
             >
               {isExpanded ? 'Show less' : 'Show more'}
             </button>
@@ -134,7 +179,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
               />
               {bookmark.media.length > 1 && (
                 <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded bg-black/80 px-2 py-0.5 text-[10px] font-mono font-medium text-white/90 border border-white/10 backdrop-blur-xs">
-                  <ImageIcon className="h-3 w-3" />
+                  <ImageIcon className="h-3 w-3 text-amber-400" />
                   <span>+{bookmark.media.length - 1}</span>
                 </div>
               )}
@@ -144,8 +189,8 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
 
         {/* Personal Notes Preview */}
         {bookmark.notes && (
-          <div className="mt-3 flex items-start gap-2 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-[11.5px] text-muted border border-white/[0.06]">
-            <MessageSquare className="h-3.5 w-3.5 shrink-0 mt-0.5 text-teal-400/80" />
+          <div className="mt-3 flex items-start gap-2 rounded-lg bg-amber-500/[0.04] px-2.5 py-1.5 text-[11.5px] text-muted border border-amber-500/15">
+            <MessageSquare className="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-400/90" />
             <span className="line-clamp-2 italic text-foreground/80 leading-relaxed">{bookmark.notes}</span>
           </div>
         )}

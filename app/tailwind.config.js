@@ -7,19 +7,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#090a0d',
-        panel: '#101216',
-        card: '#14161c',
-        cardHover: '#181b22',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderHover: 'rgba(255, 255, 255, 0.16)',
+        background: '#0c0b0e',
+        panel: '#121116',
+        card: '#17161c',
+        cardHover: '#1d1b24',
+        border: 'rgba(245, 235, 220, 0.08)',
+        borderHover: 'rgba(245, 158, 11, 0.28)',
         accent: {
-          DEFAULT: '#14B8A6',
-          hover: '#2DD4BF',
-          subtle: 'rgba(20, 184, 166, 0.12)',
+          DEFAULT: '#F59E0B',
+          hover: '#FBBF24',
+          subtle: 'rgba(245, 158, 11, 0.12)',
         },
-        muted: '#8b929e',
-        foreground: '#f0f2f5',
+        sage: {
+          DEFAULT: '#10B981',
+          hover: '#34D399',
+          subtle: 'rgba(16, 185, 129, 0.12)',
+        },
+        muted: '#9b948a',
+        foreground: '#f5f2eb',
         danger: '#F43F5E',
       },
       borderRadius: {
@@ -28,13 +33,14 @@ export default {
         md: '8px',
         lg: '12px',
         xl: '16px',
+        '2xl': '20px',
       },
       fontFamily: {
         sans: ['"Inter Variable"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
-        'card': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.4)',
-        'card-hover': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 8px 24px -4px rgba(0, 0, 0, 0.5)',
+        'card': 'inset 0 1px 0 0 rgba(255, 245, 230, 0.06), 0 2px 8px -2px rgba(0, 0, 0, 0.6)',
+        'card-hover': 'inset 0 1px 0 0 rgba(245, 158, 11, 0.2), 0 12px 28px -6px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(245, 158, 11, 0.15)',
       },
     },
   },
