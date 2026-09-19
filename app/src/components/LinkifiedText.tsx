@@ -1,5 +1,6 @@
 import React from 'react';
 import { tokenizeTextWithLinks } from '../lib/linkify';
+import { Globe } from 'lucide-react';
 
 interface LinkifiedTextProps {
   text: string;
@@ -27,16 +28,6 @@ function formatDisplayUrl(content: string): string {
   return clean;
 }
 
-function getDomain(url: string): string {
-  try {
-    const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
-    const parsed = new URL(fullUrl);
-    return parsed.hostname;
-  } catch {
-    return '';
-  }
-}
-
 export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
   if (!text) return null;
 
@@ -47,8 +38,6 @@ export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
       {tokens.map((token, index) => {
         if (token.type === 'link' && token.url) {
           const display = formatDisplayUrl(token.content);
-          const domain = getDomain(token.url);
-          const faviconUrl = domain ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=32` : '';
 
           return (
             <a
@@ -57,22 +46,12 @@ export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-neutral-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.18] px-2 py-0.5 rounded my-0.5 transition-all no-underline cursor-pointer align-baseline select-text shadow-xs group/link"
+              className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-zinc-300 hover:text-white bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 hover:border-zinc-600 px-2 py-0.5 rounded my-0.5 transition-colors no-underline cursor-pointer align-baseline select-text group/link"
               title={token.url}
             >
-              {faviconUrl && (
-                <img
-                  src={faviconUrl}
-                  alt=""
-                  className="h-3 w-3 rounded-xs shrink-0 opacity-70 group-hover/link:opacity-100 transition-opacity"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              )}
+              <Globe className="h-3 w-3 shrink-0 text-zinc-400 group-hover/link:text-zinc-200 transition-colors" />
               <span className="truncate max-w-[260px] font-medium">{display}</span>
-              <span className="text-[10px] text-muted/60 font-sans select-none group-hover/link:text-white">↗</span>
+              <span className="text-[10px] text-zinc-500 font-sans select-none group-hover/link:text-white">↗</span>
             </a>
           );
         }

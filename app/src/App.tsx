@@ -152,6 +152,8 @@ export const App: React.FC = () => {
           setSelectedTags([]);
         }}
         viewMode={viewMode}
+
+        selectedBookmarkId={selectedBookmark?.id}
       />
 
       {/* Detail Slide-out Drawer */}
@@ -183,9 +185,9 @@ export const App: React.FC = () => {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: '#16171c',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#f3f4f6',
+            background: '#18181b',
+            border: '1px solid #27272a',
+            color: '#fafafa',
             fontFamily: 'Inter Variable, system-ui, sans-serif',
           },
         }}

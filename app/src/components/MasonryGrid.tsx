@@ -13,6 +13,8 @@ interface MasonryGridProps {
   onOpenImport: () => void;
   onClearFilters: () => void;
   viewMode?: 'grid' | 'feed';
+
+  selectedBookmarkId?: string | null;
 }
 
 /**
@@ -53,6 +55,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   onOpenImport,
   onClearFilters,
   viewMode = 'grid',
+  selectedBookmarkId,
 }) => {
   const columnCount = useColumnCount();
 
@@ -60,16 +63,16 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   if (totalUnfilteredCount === 0) {
     return (
       <div className="flex min-h-[55vh] flex-col items-center justify-center px-4 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/[0.03] border border-white/[0.08] text-muted mb-4 shadow-sm">
-          <Upload className="h-5 w-5 text-neutral-300" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-900 border border-border text-muted mb-4">
+          <Upload className="h-5 w-5 text-foreground" />
         </div>
         <h3 className="text-base font-semibold text-foreground">No bookmarks imported yet</h3>
         <p className="mt-1.5 max-w-sm text-xs text-muted leading-relaxed">
-          Import your <code className="text-foreground bg-white/[0.05] px-1.5 py-0.5 rounded border border-white/[0.08] font-mono">bookmarks-export.json</code> from the scraper to start searching, browsing, and tagging.
+          Import your <code className="text-foreground bg-zinc-900 px-1.5 py-0.5 rounded border border-border font-mono">bookmarks-export.json</code> from the scraper to start searching, browsing, and tagging.
         </p>
         <button
           onClick={onOpenImport}
-          className="mt-5 flex items-center gap-2 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.12] px-4 py-2 text-xs font-medium text-foreground transition-all active:scale-95 shadow-xs"
+          className="mt-5 flex items-center gap-2 rounded bg-zinc-800 hover:bg-zinc-700 border border-border px-4 py-2 text-xs font-medium text-foreground transition-colors active:scale-95"
         >
           <Upload className="h-4 w-4" />
           <span>Import JSON File</span>
@@ -82,7 +85,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
   if (bookmarks.length === 0) {
     return (
       <div className="flex min-h-[45vh] flex-col items-center justify-center px-4 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/[0.03] border border-white/[0.08] text-muted mb-3">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-900 border border-border text-muted mb-3">
           <BookmarkX className="h-5 w-5 text-muted" />
         </div>
         <h3 className="text-sm font-semibold text-foreground">No matching bookmarks found</h3>
@@ -91,7 +94,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
         </p>
         <button
           onClick={onClearFilters}
-          className="mt-4 rounded-lg border border-white/[0.1] bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-white/[0.08] transition-colors"
+          className="mt-4 rounded border border-border bg-zinc-900 px-3.5 py-1.5 text-xs font-medium text-foreground hover:bg-zinc-800 transition-colors"
         >
           Reset Filters
         </button>
@@ -116,10 +119,10 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
           {bookmarks.map((bookmark, index) => (
             <motion.div
               key={bookmark.id}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.2,
+                duration: 0.18,
                 delay: Math.min(index * 0.02, 0.25),
                 ease: [0.25, 0.1, 0.25, 1],
               }}
@@ -129,23 +132,24 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
                 onClick={onSelectBookmark}
                 onTagClick={onTagClick}
                 onDelete={onDeleteBookmark}
+                isSelected={selectedBookmarkId === bookmark.id}
               />
             </motion.div>
           ))}
         </div>
       ) : (
-        /* True Interlocking Masonry Grid View */
-        <div className="flex gap-5 items-start">
+        /* Interlocking Masonry Grid View */
+        <div className="flex gap-4 items-start">
           {columns.map((colBookmarks, colIndex) => (
-            <div key={colIndex} className="flex-1 flex flex-col gap-5 min-w-0">
+            <div key={colIndex} className="flex-1 flex flex-col gap-4 min-w-0">
               {colBookmarks.map((bookmark, itemIndex) => (
                 <motion.div
                   key={bookmark.id}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.22,
-                    delay: Math.min((colIndex + itemIndex * columnCount) * 0.02, 0.3),
+                    duration: 0.18,
+                    delay: Math.min((colIndex + itemIndex * columnCount) * 0.02, 0.25),
                     ease: [0.25, 0.1, 0.25, 1],
                   }}
                 >
@@ -154,6 +158,7 @@ export const MasonryGrid: React.FC<MasonryGridProps> = ({
                     onClick={onSelectBookmark}
                     onTagClick={onTagClick}
                     onDelete={onDeleteBookmark}
+                    isSelected={selectedBookmarkId === bookmark.id}
                   />
                 </motion.div>
               ))}

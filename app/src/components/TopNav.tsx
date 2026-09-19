@@ -34,14 +34,14 @@ export const TopNav: React.FC<TopNavProps> = ({
   onViewModeChange,
 }) => {
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-border bg-background">
       <div className="mx-auto max-w-[1600px] px-4 py-2.5 sm:px-6">
         {/* Main Command Bar Row */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Brand Identity & Status */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/[0.06] border border-white/[0.1] font-mono text-xs font-bold text-white shadow-xs">
+              <span className="flex h-7 w-7 items-center justify-center rounded bg-zinc-800 border border-border font-mono text-xs font-bold text-foreground">
                 𝕏
               </span>
               <h1 className="text-sm font-semibold tracking-[-0.01em] text-foreground">
@@ -49,7 +49,7 @@ export const TopNav: React.FC<TopNavProps> = ({
               </h1>
             </div>
 
-            <div className="flex items-center gap-1.5 rounded-full bg-white/[0.03] px-2.5 py-0.5 text-xs text-muted/90 border border-white/[0.06]">
+            <div className="flex items-center gap-1.5 rounded bg-zinc-900 px-2.5 py-0.5 text-xs text-muted border border-border">
               <span className="font-semibold text-foreground">{filteredCount}</span>
               {filteredCount !== totalCount && (
                 <span className="text-muted/70">/ {totalCount}</span>
@@ -60,13 +60,13 @@ export const TopNav: React.FC<TopNavProps> = ({
 
           {/* Centered Command Search Bar */}
           <div className="relative flex-1 max-w-lg">
-            <Search className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted/70" />
+            <Search className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search keywords, @author, tags, or notes..."
-              className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] py-1.5 pl-10 pr-12 text-xs text-foreground placeholder:text-muted/60 focus:border-white/[0.25] focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-white/[0.1] transition-all font-normal"
+              className="w-full rounded border border-border bg-zinc-900 py-1.5 pl-10 pr-12 text-xs text-foreground placeholder:text-muted focus:border-zinc-500 focus:outline-none transition-colors font-normal"
             />
             {searchQuery ? (
               <button
@@ -77,7 +77,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 <X className="h-3.5 w-3.5" />
               </button>
             ) : (
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono font-medium text-muted/50 bg-white/[0.05] border border-white/[0.08] rounded px-1.5 py-0.5 pointer-events-none select-none">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono font-medium text-muted/60 bg-zinc-800 border border-border rounded px-1.5 py-0.5 pointer-events-none select-none">
                 /
               </span>
             )}
@@ -85,14 +85,14 @@ export const TopNav: React.FC<TopNavProps> = ({
 
           {/* Right Controls: View Switcher & Import */}
           <div className="flex items-center gap-2">
-            {/* Linear View Mode Toggle: Grid vs Feed */}
-            <div className="flex items-center rounded-lg border border-white/[0.08] bg-white/[0.03] p-0.5">
+            {/* View Mode Toggle: Grid vs Feed */}
+            <div className="flex items-center rounded border border-border bg-zinc-900 p-0.5">
               <button
                 onClick={() => onViewModeChange('grid')}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all ${
+                className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors ${
                   viewMode === 'grid'
-                    ? 'bg-white/[0.1] text-foreground shadow-xs'
-                    : 'text-muted hover:text-foreground hover:bg-white/[0.04]'
+                    ? 'bg-zinc-800 text-foreground'
+                    : 'text-muted hover:text-foreground hover:bg-zinc-800/50'
                 }`}
                 title="Masonry Grid View"
               >
@@ -102,22 +102,22 @@ export const TopNav: React.FC<TopNavProps> = ({
 
               <button
                 onClick={() => onViewModeChange('feed')}
-                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all ${
+                className={`flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition-colors ${
                   viewMode === 'feed'
-                    ? 'bg-white/[0.1] text-foreground shadow-xs'
-                    : 'text-muted hover:text-foreground hover:bg-white/[0.04]'
+                    ? 'bg-zinc-800 text-foreground'
+                    : 'text-muted hover:text-foreground hover:bg-zinc-800/50'
                 }`}
-                title="Calm Linear Feed View"
+                title="Linear Feed View"
               >
                 <Rows3 className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline text-[11px]">Feed</span>
               </button>
             </div>
 
-            {/* Secondary Import Action */}
+            {/* Flat Solid Import Action */}
             <button
               onClick={onOpenImport}
-              className="flex items-center justify-center gap-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.16] px-3 py-1.5 text-xs font-medium text-foreground transition-all active:scale-95 shadow-xs"
+              className="flex items-center justify-center gap-1.5 rounded bg-zinc-800 hover:bg-zinc-700 border border-border px-3 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
             >
               <Upload className="h-3.5 w-3.5 text-muted group-hover:text-foreground" />
               <span className="text-[11px]">Import</span>
@@ -127,10 +127,10 @@ export const TopNav: React.FC<TopNavProps> = ({
 
         {/* Tag Filters Row */}
         {allTags.length > 0 && (
-          <div className="mt-2.5 flex items-center gap-2 overflow-x-auto pb-0.5 text-xs no-scrollbar border-t border-white/[0.04] pt-2">
+          <div className="mt-2.5 flex items-center gap-2 overflow-x-auto pb-0.5 text-xs no-scrollbar border-t border-border/40 pt-2">
             <div className="flex items-center gap-1.5 text-muted shrink-0">
-              <TagIcon className="h-3 w-3 text-muted/70" />
-              <span className="text-[11px] font-medium uppercase tracking-wider text-muted/80">Filter:</span>
+              <TagIcon className="h-3 w-3 text-muted" />
+              <span className="text-[11px] font-medium uppercase tracking-wider text-muted">Filter:</span>
             </div>
 
             {/* Match Mode Toggle (OR / AND) */}
@@ -138,7 +138,7 @@ export const TopNav: React.FC<TopNavProps> = ({
               <button
                 onClick={onToggleTagMatchMode}
                 title="Toggle tag filter logic"
-                className="rounded border border-white/[0.15] bg-white/[0.05] px-1.5 py-0.5 text-[10px] font-mono font-semibold text-foreground uppercase hover:bg-white/[0.1] transition-colors"
+                className="rounded border border-border bg-zinc-800 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-foreground uppercase hover:bg-zinc-700 transition-colors"
               >
                 {tagMatchMode}
               </button>
@@ -154,16 +154,16 @@ export const TopNav: React.FC<TopNavProps> = ({
                   <button
                     key={tag}
                     onClick={() => onToggleTag(tag)}
-                    className={`flex items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium transition-all border ${
+                    className={`flex items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium transition-colors border ${
                       isSelected
-                        ? `${tagColor.bg} ${tagColor.text} ${tagColor.border} ring-1 ring-white/20 font-semibold shadow-xs`
-                        : 'border-white/[0.06] bg-white/[0.02] text-muted hover:border-white/[0.14] hover:text-foreground hover:bg-white/[0.05]'
+                        ? `${tagColor.bg} ${tagColor.text} ${tagColor.border} font-semibold`
+                        : 'border-border bg-zinc-900 text-muted hover:border-zinc-700 hover:text-foreground hover:bg-zinc-800'
                     }`}
                   >
                     <span>#{tag}</span>
                     <span
                       className={`text-[9.5px] px-1 rounded-sm font-mono ${
-                        isSelected ? 'bg-black/40 text-white font-medium' : 'bg-white/[0.05] text-muted/70'
+                        isSelected ? 'bg-black/40 text-white font-medium' : 'bg-zinc-800 text-muted'
                       }`}
                     >
                       {count}
@@ -176,7 +176,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             {selectedTags.length > 0 && (
               <button
                 onClick={onClearTags}
-                className="shrink-0 text-[11px] text-muted/80 hover:text-foreground underline decoration-white/20 hover:decoration-white/50 ml-1 transition-colors"
+                className="shrink-0 text-[11px] text-muted hover:text-foreground underline decoration-zinc-700 hover:decoration-zinc-500 ml-1 transition-colors"
               >
                 Clear all
               </button>

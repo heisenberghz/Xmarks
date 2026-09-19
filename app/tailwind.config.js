@@ -7,34 +7,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0b0c0e',
-        panel: '#121316',
-        card: '#16171c',
-        cardHover: '#1c1d24',
-        border: 'rgba(255, 255, 255, 0.08)',
-        borderHover: 'rgba(255, 255, 255, 0.16)',
+        background: '#09090b', // Pure neutral zinc-950
+        panel: '#121215',       // Pure neutral zinc-925
+        card: '#18181b',        // Pure neutral zinc-900
+        cardHover: '#202024',   // Flat neutral hover fill
+        border: '#27272a',      // Pure neutral zinc-800 flat border (no glow)
+        borderHover: '#3f3f46', // Pure neutral zinc-700
         accent: {
-          DEFAULT: '#5e6ad2',
-          hover: '#6f7be2',
-          subtle: 'rgba(94, 106, 210, 0.12)',
+          DEFAULT: '#e4e4e7',   // Pure neutral zinc-200
+          hover: '#ffffff',     // White
+          subtle: '#27272a',    // Pure neutral zinc-800
         },
-        muted: '#8a8f98',
-        foreground: '#f3f4f6',
-        danger: '#f87171',
+        muted: '#a1a1aa',       // Pure neutral zinc-400
+        foreground: '#fafafa',  // Pure neutral zinc-50
+        danger: '#ef4444',
       },
       borderRadius: {
-        DEFAULT: '8px',
-        sm: '6px',
-        md: '8px',
-        lg: '12px',
-        xl: '16px',
+        DEFAULT: '6px',
+        sm: '4px',
+        md: '6px',
+        lg: '8px',
+        xl: '12px',
       },
       fontFamily: {
         sans: ['"Inter Variable"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
-        'card': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.4)',
-        'card-hover': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 8px 24px -4px rgba(0, 0, 0, 0.6)',
+        none: 'none',
+        card: 'none',
+        'card-hover': 'none',
+        xs: 'none',
+        sm: 'none',
+        md: 'none',
+        lg: 'none',
+        xl: 'none',
+        '2xl': 'none',
       },
     },
   },

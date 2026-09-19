@@ -107,16 +107,16 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative z-10 flex h-full w-full max-w-xl flex-col border-l border-white/[0.08] bg-panel shadow-2xl"
+            transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+            className="relative z-10 flex h-full w-full max-w-xl flex-col border-l border-border bg-panel"
           >
             {/* Drawer Header */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-4 bg-card shadow-xs">
+            <div className="flex items-center justify-between border-b border-border px-6 py-4 bg-card">
               <div className="flex items-center gap-2.5">
-                <span className="text-[11px] font-mono font-semibold uppercase text-neutral-400 tracking-wider">
+                <span className="text-[11px] font-mono font-semibold uppercase text-zinc-400 tracking-wider">
                   Bookmark Details
                 </span>
-                <span className="text-[10px] text-muted/60 font-mono">#{bookmark.id}</span>
+                <span className="text-[10px] text-muted font-mono">#{bookmark.id}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -124,14 +124,14 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                   href={bookmark.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-foreground hover:text-white border border-white/[0.1] hover:border-white/[0.2] hover:bg-white/[0.08] transition-all shadow-xs"
+                  className="flex items-center gap-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-foreground px-3 py-1.5 text-xs font-medium border border-border transition-colors"
                 >
                   <span>Open on X</span>
                   <ExternalLink className="h-3 w-3" />
                 </a>
                 <button
                   onClick={onClose}
-                  className="rounded-lg p-1.5 text-muted hover:bg-white/[0.06] hover:text-foreground transition-colors"
+                  className="rounded p-1.5 text-muted hover:bg-zinc-800 hover:text-foreground transition-colors"
                   title="Close panel"
                 >
                   <X className="h-4 w-4" />
@@ -140,19 +140,19 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
             </div>
 
             {/* Drawer Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 space-y-5 no-scrollbar">
               {/* Author Header */}
-              <div className="flex items-start justify-between gap-3 pb-2 border-b border-white/[0.06]">
+              <div className="flex items-start justify-between gap-3 pb-3 border-b border-border/60">
                 <div className="flex items-center gap-3">
                   {bookmark.avatar_url ? (
                     <img
                       src={bookmark.avatar_url}
                       alt={bookmark.author_name || bookmark.author_handle || ''}
-                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/10"
+                      className="h-10 w-10 shrink-0 rounded-full object-cover border border-border"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.05] ring-1 ring-white/10 text-muted">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 border border-border text-muted">
                       <User className="h-5 w-5" />
                     </div>
                   )}
@@ -168,15 +168,15 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-xs text-muted/80 font-mono pt-1">
-                  <Calendar className="h-3.5 w-3.5 text-muted/60" />
+                <div className="flex items-center gap-1.5 text-xs text-muted font-mono pt-1">
+                  <Calendar className="h-3.5 w-3.5 text-muted" />
                   <span>{formatDate(bookmark.timestamp)}</span>
                 </div>
               </div>
 
               {/* Full Tweet Text */}
-              <div className="rounded-xl border border-white/[0.08] bg-card p-4.5 shadow-card">
-                <p className="text-[14px] leading-[1.65] text-foreground/95 select-text whitespace-pre-wrap font-normal tracking-[-0.005em]">
+              <div className="rounded-lg border border-border bg-card p-4">
+                <p className="text-[14px] leading-[1.65] text-foreground select-text whitespace-pre-wrap font-normal">
                   <LinkifiedText text={bookmark.text} />
                 </p>
               </div>
@@ -184,14 +184,14 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
               {/* Media Previews */}
               {bookmark.media && bookmark.media.length > 0 && (
                 <div className="space-y-2.5">
-                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted/80">
+                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-muted">
                     Attachments ({bookmark.media.length})
                   </h4>
                   <div className="grid grid-cols-1 gap-2.5">
                     {bookmark.media.map((src, index) => (
                       <div
                         key={index}
-                        className="overflow-hidden rounded-xl border border-white/[0.08] bg-black/40"
+                        className="overflow-hidden rounded-lg border border-border bg-black/40"
                       >
                         <img
                           src={src}
@@ -206,9 +206,9 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
               )}
 
               {/* Tag Editor Section */}
-              <div className="rounded-xl border border-white/[0.08] bg-card p-4.5 space-y-3.5 shadow-card">
+              <div className="rounded-lg border border-border bg-card p-4 space-y-3">
                 <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-foreground">
-                  <Tag className="h-3.5 w-3.5 text-neutral-400" />
+                  <Tag className="h-3.5 w-3.5 text-zinc-400" />
                   <span>Tags</span>
                 </div>
 
@@ -224,7 +224,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                         <span>#{tag}</span>
                         <button
                           onClick={() => handleRemoveTag(tag)}
-                          className="hover:opacity-75 transition-opacity"
+                          className="hover:text-white transition-colors"
                           title={`Remove #${tag}`}
                         >
                           <X className="h-3 w-3" />
@@ -250,12 +250,12 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                       }
                     }}
                     placeholder="Add tag and press Enter..."
-                    className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3.5 py-2 text-xs text-foreground placeholder:text-muted/60 focus:border-white/[0.25] focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-white/[0.1] transition-all font-normal"
+                    className="flex-1 rounded border border-border bg-zinc-900 px-3.5 py-2 text-xs text-foreground placeholder:text-muted focus:border-zinc-500 focus:outline-none focus:ring-0 transition-colors font-normal"
                   />
                   <button
                     onClick={() => handleAddTag(newTagInput)}
                     disabled={!newTagInput.trim()}
-                    className="flex items-center gap-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-foreground border border-white/[0.1] px-3.5 py-2 text-xs font-medium disabled:opacity-30 transition-all active:scale-95"
+                    className="flex items-center gap-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-foreground border border-border px-3.5 py-2 text-xs font-medium disabled:opacity-30 transition-colors"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     <span>Add</span>
@@ -265,12 +265,12 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                 {/* Quick Suggestions */}
                 {suggestedTags.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-1 text-[11px] text-muted">
-                    <span className="text-[10.5px] uppercase font-mono mr-1 text-muted/70">Suggestions:</span>
+                    <span className="text-[10.5px] uppercase font-mono mr-1 text-muted">Suggestions:</span>
                     {suggestedTags.map((st) => (
                       <button
                         key={st}
                         onClick={() => handleAddTag(st)}
-                        className="rounded px-2 py-0.5 text-[10.5px] text-muted hover:text-foreground hover:border-white/[0.2] border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                        className="rounded px-2 py-0.5 text-[10.5px] text-muted hover:text-foreground hover:border-zinc-600 border border-border bg-zinc-900 hover:bg-zinc-800 transition-colors"
                       >
                         +{st}
                       </button>
@@ -280,13 +280,13 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
               </div>
 
               {/* Personal Notes Editor Section */}
-              <div className="rounded-xl border border-white/[0.08] bg-card p-4.5 space-y-2.5 shadow-card">
+              <div className="rounded-lg border border-border bg-card p-4 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-foreground">
-                    <FileText className="h-3.5 w-3.5 text-neutral-400" />
+                    <FileText className="h-3.5 w-3.5 text-zinc-400" />
                     <span>Personal Notes</span>
                   </div>
-                  <span className="text-[10.5px] text-muted/60 font-mono">Saved automatically on blur</span>
+                  <span className="text-[10.5px] text-muted font-mono">Saved automatically on blur</span>
                 </div>
 
                 <textarea
@@ -295,16 +295,16 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                   onBlur={handleNotesBlur}
                   rows={4}
                   placeholder="Record insights, context, action items, or why you saved this tweet..."
-                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-3 text-xs text-foreground placeholder:text-muted/60 focus:border-white/[0.25] focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-white/[0.1] resize-y leading-relaxed font-normal transition-all"
+                  className="w-full rounded border border-border bg-zinc-900 p-3 text-xs text-foreground placeholder:text-muted focus:border-zinc-500 focus:outline-none focus:ring-0 resize-y leading-relaxed font-normal transition-colors"
                 />
               </div>
             </div>
 
             {/* Drawer Footer: Delete Bookmark */}
-            <div className="border-t border-white/[0.08] bg-card px-6 py-3.5 flex items-center justify-between shadow-xs">
+            <div className="border-t border-border bg-card px-6 py-3.5 flex items-center justify-between">
               <button
                 onClick={() => onDeleteBookmark(bookmark.id)}
-                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-rose-400 hover:bg-rose-500/10 border border-rose-500/20 hover:border-rose-500/40 transition-colors"
+                className="flex items-center gap-1.5 rounded px-3 py-1.5 text-xs font-medium text-red-400 hover:bg-red-950/40 border border-red-900/50 hover:border-red-800 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 <span>Remove from storage</span>
@@ -312,7 +312,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
 
               <button
                 onClick={onClose}
-                className="rounded-lg border border-white/[0.1] bg-white/[0.04] px-4 py-1.5 text-xs font-medium text-foreground hover:bg-white/[0.08] transition-colors"
+                className="rounded border border-border bg-zinc-800 px-4 py-1.5 text-xs font-medium text-foreground hover:bg-zinc-700 transition-colors"
               >
                 Done
               </button>
