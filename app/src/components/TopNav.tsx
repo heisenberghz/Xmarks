@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Upload, X, Tag as TagIcon, LayoutGrid, Rows3, ArrowUpDown, Check } from 'lucide-react';
+import { Search, Upload, X, Tag as TagIcon, LayoutGrid, Rows3, ArrowUpDown, Check, Trash2 } from 'lucide-react';
 import { SortMode } from '../types/bookmark';
 
 interface TopNavProps {
@@ -14,6 +14,7 @@ interface TopNavProps {
   totalCount: number;
   filteredCount: number;
   onOpenImport: () => void;
+  onOpenClearAll?: () => void;
   viewMode: 'grid' | 'feed';
   onViewModeChange: (mode: 'grid' | 'feed') => void;
   sortMode: SortMode;
@@ -50,6 +51,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   totalCount,
   filteredCount,
   onOpenImport,
+  onOpenClearAll,
   viewMode,
   onViewModeChange,
   sortMode,
@@ -234,6 +236,18 @@ export const TopNav: React.FC<TopNavProps> = ({
               <Upload className="h-3.5 w-3.5 text-muted group-hover:text-foreground" />
               <span className="text-[11px]">Import</span>
             </button>
+
+            {/* Clear All Bookmarks Action */}
+            {totalCount > 0 && onOpenClearAll && (
+              <button
+                onClick={onOpenClearAll}
+                className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-red-950/30 border border-border hover:border-red-900/50 px-2.5 py-1.5 text-xs font-medium text-muted hover:text-red-400 transition-colors"
+                title="Clear all bookmarks from local storage"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span className="hidden lg:inline text-[11px]">Clear all</span>
+              </button>
+            )}
           </div>
         </div>
 

@@ -5,6 +5,7 @@ import {
   saveBookmarkToDB,
   saveBookmarksBatchToDB,
   deleteBookmarkFromDB,
+  clearAllBookmarksFromDB,
 } from './db/indexedDB';
 import { parseAndDedupeBookmarks } from './lib/importer';
 import { filterBookmarks, getAllTagsWithCounts } from './lib/search';
@@ -13,6 +14,7 @@ import { MasonryGrid } from './components/MasonryGrid';
 import { DetailPanel } from './components/DetailPanel';
 import { ImportModal } from './components/ImportModal';
 import { DeleteDialog } from './components/DeleteDialog';
+import { ClearAllDialog } from './components/ClearAllDialog';
 import { Toaster, toast } from 'sonner';
 
 export const App: React.FC = () => {
@@ -22,6 +24,7 @@ export const App: React.FC = () => {
   const [tagMatchMode, setTagMatchMode] = useState<'OR' | 'AND'>('OR');
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [isClearAllOpen, setIsClearAllOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'feed'>('grid');
@@ -138,6 +141,16 @@ export const App: React.FC = () => {
     toast('Bookmark removed from local storage');
   };
 
+  const handleConfirmClearAll = async () => {
+    await clearAllBookmarksFromDB();
+    setBookmarks([]);
+    setSelectedBookmark(null);
+    setSelectedTags([]);
+    setSearchQuery('');
+    setIsClearAllOpen(false);
+    toast('All bookmarks cleared from local storage');
+  };
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-xs text-muted">
@@ -164,6 +177,7 @@ export const App: React.FC = () => {
         totalCount={bookmarks.length}
         filteredCount={filteredBookmarks.length}
         onOpenImport={() => setIsImportOpen(true)}
+        onOpenClearAll={() => setIsClearAllOpen(true)}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         sortMode={sortMode}
@@ -205,11 +219,19 @@ export const App: React.FC = () => {
         onImportFile={handleImportFile}
       />
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Single Bookmark Confirmation Modal */}
       <DeleteDialog
         isOpen={!!deleteTargetId}
         onClose={() => setDeleteTargetId(null)}
         onConfirm={handleConfirmDelete}
+      />
+
+      {/* Clear All Bookmarks Confirmation Modal */}
+      <ClearAllDialog
+        isOpen={isClearAllOpen}
+        onClose={() => setIsClearAllOpen(false)}
+        onConfirm={handleConfirmClearAll}
+        totalCount={bookmarks.length}
       />
 
       {/* Toast Notification Provider */}
