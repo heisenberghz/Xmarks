@@ -113,7 +113,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
             {/* Drawer Header */}
             <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-4 bg-card shadow-xs">
               <div className="flex items-center gap-2.5">
-                <span className="text-[11px] font-mono font-semibold uppercase text-amber-400 tracking-wider">
+                <span className="text-[11px] font-mono font-semibold uppercase text-neutral-400 tracking-wider">
                   Bookmark Details
                 </span>
                 <span className="text-[10px] text-muted/60 font-mono">#{bookmark.id}</span>
@@ -124,7 +124,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                   href={bookmark.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-amber-300 border border-amber-500/25 hover:border-amber-500/40 hover:bg-amber-500/10 transition-all shadow-xs"
+                  className="flex items-center gap-1.5 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-foreground hover:text-white border border-white/[0.1] hover:border-white/[0.2] hover:bg-white/[0.08] transition-all shadow-xs"
                 >
                   <span>Open on X</span>
                   <ExternalLink className="h-3 w-3" />
@@ -148,7 +148,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                     <img
                       src={bookmark.avatar_url}
                       alt={bookmark.author_name || bookmark.author_handle || ''}
-                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-amber-500/30"
+                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-white/10"
                       loading="lazy"
                     />
                   ) : (
@@ -208,7 +208,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
               {/* Tag Editor Section */}
               <div className="rounded-xl border border-white/[0.08] bg-card p-4.5 space-y-3.5 shadow-card">
                 <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-foreground">
-                  <Tag className="h-3.5 w-3.5 text-amber-400" />
+                  <Tag className="h-3.5 w-3.5 text-neutral-400" />
                   <span>Tags</span>
                 </div>
 
@@ -250,12 +250,12 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                       }
                     }}
                     placeholder="Add tag and press Enter..."
-                    className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3.5 py-2 text-xs text-foreground placeholder:text-muted/60 focus:border-amber-500/40 focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all font-normal"
+                    className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3.5 py-2 text-xs text-foreground placeholder:text-muted/60 focus:border-white/[0.25] focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-white/[0.1] transition-all font-normal"
                   />
                   <button
                     onClick={() => handleAddTag(newTagInput)}
                     disabled={!newTagInput.trim()}
-                    className="flex items-center gap-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 px-3.5 py-2 text-xs font-medium disabled:opacity-30 transition-all active:scale-95"
+                    className="flex items-center gap-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-foreground border border-white/[0.1] px-3.5 py-2 text-xs font-medium disabled:opacity-30 transition-all active:scale-95"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     <span>Add</span>
@@ -270,7 +270,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                       <button
                         key={st}
                         onClick={() => handleAddTag(st)}
-                        className="rounded px-2 py-0.5 text-[10.5px] text-muted hover:text-amber-300 hover:border-amber-500/30 border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
+                        className="rounded px-2 py-0.5 text-[10.5px] text-muted hover:text-foreground hover:border-white/[0.2] border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] transition-colors"
                       >
                         +{st}
                       </button>
@@ -283,7 +283,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
               <div className="rounded-xl border border-white/[0.08] bg-card p-4.5 space-y-2.5 shadow-card">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-foreground">
-                    <FileText className="h-3.5 w-3.5 text-amber-400" />
+                    <FileText className="h-3.5 w-3.5 text-neutral-400" />
                     <span>Personal Notes</span>
                   </div>
                   <span className="text-[10.5px] text-muted/60 font-mono">Saved automatically on blur</span>
@@ -295,7 +295,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
                   onBlur={handleNotesBlur}
                   rows={4}
                   placeholder="Record insights, context, action items, or why you saved this tweet..."
-                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-3 text-xs text-foreground placeholder:text-muted/60 focus:border-amber-500/40 focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-amber-500/20 resize-y leading-relaxed font-normal transition-all"
+                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.03] p-3 text-xs text-foreground placeholder:text-muted/60 focus:border-white/[0.25] focus:bg-white/[0.05] focus:outline-none focus:ring-1 focus:ring-white/[0.1] resize-y leading-relaxed font-normal transition-all"
                 />
               </div>
             </div>

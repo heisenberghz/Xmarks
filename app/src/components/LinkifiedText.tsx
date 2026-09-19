@@ -8,7 +8,6 @@ interface LinkifiedTextProps {
 function formatDisplayUrl(content: string): string {
   // Strip protocol and www for clean display
   let clean = content.replace(/^https?:\/\/(www\.)?/, '');
-  // Remove trailing slashes
   clean = clean.replace(/\/+$/, '');
   
   // If the path is excessively long, truncate the middle nicely
@@ -58,14 +57,14 @@ export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-amber-300 hover:text-amber-200 bg-amber-500/[0.08] hover:bg-amber-500/[0.14] border border-amber-500/20 hover:border-amber-500/40 px-2 py-0.5 rounded my-0.5 transition-all no-underline cursor-pointer align-baseline select-text shadow-xs group/link"
+              className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-neutral-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.18] px-2 py-0.5 rounded my-0.5 transition-all no-underline cursor-pointer align-baseline select-text shadow-xs group/link"
               title={token.url}
             >
               {faviconUrl && (
                 <img
                   src={faviconUrl}
                   alt=""
-                  className="h-3 w-3 rounded-xs shrink-0 opacity-80 group-hover/link:opacity-100 transition-opacity"
+                  className="h-3 w-3 rounded-xs shrink-0 opacity-70 group-hover/link:opacity-100 transition-opacity"
                   loading="lazy"
                   onError={(e) => {
                     (e.currentTarget as HTMLImageElement).style.display = 'none';
@@ -73,7 +72,7 @@ export const LinkifiedText: React.FC<LinkifiedTextProps> = ({ text }) => {
                 />
               )}
               <span className="truncate max-w-[260px] font-medium">{display}</span>
-              <span className="text-[10px] text-amber-400/60 font-sans select-none group-hover/link:text-amber-300">↗</span>
+              <span className="text-[10px] text-muted/60 font-sans select-none group-hover/link:text-white">↗</span>
             </a>
           );
         }

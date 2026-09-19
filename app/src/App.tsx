@@ -24,6 +24,7 @@ export const App: React.FC = () => {
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'grid' | 'feed'>('grid');
 
   // Load from IndexedDB on startup
   useEffect(() => {
@@ -111,7 +112,7 @@ export const App: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-xs text-muted">
-        <span className="h-4 w-4 animate-spin rounded-full border-2 border-accent border-t-transparent mr-2" />
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-transparent mr-2" />
         Loading your bookmarks...
       </div>
     );
@@ -119,7 +120,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
-      {/* Persistent Navigation Header */}
+      {/* Persistent Navigation Header with View Mode Switcher */}
       <TopNav
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -134,9 +135,11 @@ export const App: React.FC = () => {
         totalCount={bookmarks.length}
         filteredCount={filteredBookmarks.length}
         onOpenImport={() => setIsImportOpen(true)}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
 
-      {/* Main Masonry Grid Area */}
+      {/* Main Content Area (supports Masonry Grid & Linear Feed modes) */}
       <MasonryGrid
         bookmarks={filteredBookmarks}
         onSelectBookmark={setSelectedBookmark}
@@ -148,6 +151,7 @@ export const App: React.FC = () => {
           setSearchQuery('');
           setSelectedTags([]);
         }}
+        viewMode={viewMode}
       />
 
       {/* Detail Slide-out Drawer */}
@@ -179,9 +183,9 @@ export const App: React.FC = () => {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: '#17161c',
-            border: '1px solid rgba(245, 158, 11, 0.2)',
-            color: '#f5f2eb',
+            background: '#16171c',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            color: '#f3f4f6',
             fontFamily: 'Inter Variable, system-ui, sans-serif',
           },
         }}

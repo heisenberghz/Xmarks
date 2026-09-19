@@ -79,7 +79,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 8 }}
@@ -91,7 +91,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.08]">
               <div className="flex items-center gap-2">
-                <FileJson className="h-4 w-4 text-amber-400" />
+                <FileJson className="h-4 w-4 text-neutral-300" />
                 <h3 className="text-sm font-semibold tracking-tight text-foreground">
                   Import Bookmarks JSON
                 </h3>
@@ -116,8 +116,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                     onClick={() => fileInputRef.current?.click()}
                     className={`flex flex-col items-center justify-center rounded-xl border-2 border-dashed p-8 text-center cursor-pointer transition-all ${
                       isDragging
-                        ? 'border-amber-500 bg-amber-500/[0.08]'
-                        : 'border-white/[0.1] bg-white/[0.02] hover:border-amber-500/30 hover:bg-white/[0.04]'
+                        ? 'border-white/[0.4] bg-white/[0.06]'
+                        : 'border-white/[0.1] bg-white/[0.02] hover:border-white/[0.22] hover:bg-white/[0.04]'
                     }`}
                   >
                     <input
@@ -129,7 +129,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                     />
                     <UploadCloud
                       className={`h-10 w-10 mb-2.5 transition-colors ${
-                        isDragging ? 'text-amber-400' : 'text-muted/70'
+                        isDragging ? 'text-foreground' : 'text-muted/70'
                       }`}
                     />
                     <p className="text-xs font-semibold text-foreground">
@@ -142,7 +142,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
                   {isLoading && (
                     <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted">
-                      <span className="h-3 w-3 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />
+                      <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/40 border-t-transparent" />
                       <span>Ingesting and deduplicating bookmarks...</span>
                     </div>
                   )}
@@ -157,7 +157,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               ) : (
                 /* Import Summary */
                 <div className="py-2 space-y-4">
-                  <div className="flex items-center gap-2 text-amber-400">
+                  <div className="flex items-center gap-2 text-emerald-400">
                     <CheckCircle2 className="h-5 w-5" />
                     <span className="text-sm font-semibold">Import Complete</span>
                   </div>
@@ -169,7 +169,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                         {result.totalParsed}
                       </span>
                     </div>
-                    <div className="flex justify-between text-amber-400">
+                    <div className="flex justify-between text-emerald-400">
                       <span>New bookmarks added:</span>
                       <span className="font-mono font-semibold">+{result.added}</span>
                     </div>
@@ -181,7 +181,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
                   <button
                     onClick={handleClose}
-                    className="w-full rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 py-2 text-xs font-medium transition-all"
+                    className="w-full rounded-lg bg-white/[0.1] hover:bg-white/[0.16] text-foreground border border-white/[0.15] py-2 text-xs font-medium transition-all"
                   >
                     Done
                   </button>

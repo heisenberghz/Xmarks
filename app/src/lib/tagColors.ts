@@ -1,12 +1,12 @@
 const TAG_COLORS = [
-  { bg: 'bg-amber-500/[0.12]', text: 'text-amber-300', border: 'border-amber-500/25', dot: '#F59E0B' },
-  { bg: 'bg-emerald-500/[0.12]', text: 'text-emerald-300', border: 'border-emerald-500/25', dot: '#10B981' },
-  { bg: 'bg-orange-500/[0.12]', text: 'text-orange-300', border: 'border-orange-500/25', dot: '#F97316' },
-  { bg: 'bg-teal-500/[0.12]', text: 'text-teal-300', border: 'border-teal-500/25', dot: '#14B8A6' },
-  { bg: 'bg-rose-500/[0.12]', text: 'text-rose-300', border: 'border-rose-500/25', dot: '#F43F5E' },
-  { bg: 'bg-sky-500/[0.12]', text: 'text-sky-300', border: 'border-sky-500/25', dot: '#0EA5E9' },
-  { bg: 'bg-yellow-500/[0.12]', text: 'text-yellow-300', border: 'border-yellow-500/25', dot: '#EAB308' },
-  { bg: 'bg-stone-500/[0.15]', text: 'text-stone-300', border: 'border-stone-400/25', dot: '#A8A29E' },
+  { bg: 'bg-blue-500/[0.1]', text: 'text-blue-300', border: 'border-blue-500/20', dot: '#3B82F6' },
+  { bg: 'bg-emerald-500/[0.1]', text: 'text-emerald-300', border: 'border-emerald-500/20', dot: '#10B981' },
+  { bg: 'bg-indigo-500/[0.1]', text: 'text-indigo-300', border: 'border-indigo-500/20', dot: '#6366F1' },
+  { bg: 'bg-teal-500/[0.1]', text: 'text-teal-300', border: 'border-teal-500/20', dot: '#14B8A6' },
+  { bg: 'bg-rose-500/[0.1]', text: 'text-rose-300', border: 'border-rose-500/20', dot: '#F43F5E' },
+  { bg: 'bg-sky-500/[0.1]', text: 'text-sky-300', border: 'border-sky-500/20', dot: '#0EA5E9' },
+  { bg: 'bg-violet-500/[0.1]', text: 'text-violet-300', border: 'border-violet-500/20', dot: '#8B5CF6' },
+  { bg: 'bg-zinc-500/[0.15]', text: 'text-zinc-300', border: 'border-zinc-500/20', dot: '#71717A' },
 ];
 
 export function getTagColor(tag: string) {
