@@ -1,5 +1,6 @@
-import React from 'react';
-import { Search, Upload, X, Tag as TagIcon, LayoutGrid, Rows3 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Search, Upload, X, Tag as TagIcon, LayoutGrid, Rows3, ArrowUpDown, Check } from 'lucide-react';
+import { SortMode } from '../types/bookmark';
 
 interface TopNavProps {
   searchQuery: string;
@@ -15,7 +16,27 @@ interface TopNavProps {
   onOpenImport: () => void;
   viewMode: 'grid' | 'feed';
   onViewModeChange: (mode: 'grid' | 'feed') => void;
+  sortMode: SortMode;
+  onSortModeChange: (mode: SortMode) => void;
 }
+
+const sortOptions: { value: SortMode; label: string; desc: string }[] = [
+  {
+    value: 'bookmarked',
+    label: 'Recently Bookmarked',
+    desc: 'Original X order (top bookmark on X first)',
+  },
+  {
+    value: 'date_desc',
+    label: 'Newest Tweet',
+    desc: 'By tweet publication date (newest first)',
+  },
+  {
+    value: 'date_asc',
+    label: 'Oldest Tweet',
+    desc: 'By tweet publication date (oldest first)',
+  },
+];
 
 export const TopNav: React.FC<TopNavProps> = ({
   searchQuery,
@@ -31,7 +52,38 @@ export const TopNav: React.FC<TopNavProps> = ({
   onOpenImport,
   viewMode,
   onViewModeChange,
+  sortMode,
+  onSortModeChange,
 }) => {
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close sort dropdown when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target as Node)) {
+        setIsSortOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsSortOpen(false);
+      }
+    };
+
+    if (isSortOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSortOpen]);
+
+  const activeSortLabel =
+    sortOptions.find((opt) => opt.value === sortMode)?.label || 'Recently Bookmarked';
+
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background">
       <div className="mx-auto max-w-[1600px] px-4 py-2.5 sm:px-6">
@@ -82,8 +134,69 @@ export const TopNav: React.FC<TopNavProps> = ({
             )}
           </div>
 
-          {/* Right Controls: View Switcher & Import */}
+          {/* Right Controls: Sort, View Switcher & Import */}
           <div className="flex items-center gap-2">
+            {/* Sort Mode Dropdown */}
+            <div className="relative" ref={sortDropdownRef}>
+              <button
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="flex items-center gap-1.5 rounded border border-border bg-panel hover:bg-card hover:border-borderHover px-2.5 py-1 text-xs font-medium text-foreground transition-colors"
+                title="Change bookmark sorting"
+              >
+                <ArrowUpDown className="h-3.5 w-3.5 text-muted" />
+                <span className="hidden sm:inline text-[11px] text-muted">Sort:</span>
+                <span className="text-[11px] font-medium text-foreground truncate max-w-[130px]">
+                  {activeSortLabel}
+                </span>
+              </button>
+
+              {/* Dropdown Menu */}
+              {isSortOpen && (
+                <div className="absolute right-0 mt-1.5 w-64 rounded-lg border border-border bg-panel p-1 z-50 shadow-none">
+                  <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted/70">
+                    Sort Bookmarks By
+                  </div>
+                  {sortOptions.map((option) => {
+                    const isSelected = sortMode === option.value;
+                    return (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          onSortModeChange(option.value);
+                          setIsSortOpen(false);
+                        }}
+                        className={`w-full flex items-start gap-2.5 rounded px-2.5 py-2 text-left text-xs transition-colors ${
+                          isSelected
+                            ? 'bg-card text-foreground'
+                            : 'text-muted hover:text-foreground hover:bg-cardHover'
+                        }`}
+                      >
+                        <div className="mt-0.5 shrink-0">
+                          {isSelected ? (
+                            <Check className="h-3.5 w-3.5 text-foreground" />
+                          ) : (
+                            <span className="inline-block w-3.5" />
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div
+                            className={`font-medium text-[11.5px] ${
+                              isSelected ? 'text-foreground font-semibold' : 'text-foreground/90'
+                            }`}
+                          >
+                            {option.label}
+                          </div>
+                          <div className="text-[10px] text-muted leading-tight mt-0.5">
+                            {option.desc}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
             {/* View Mode Toggle: Grid vs Feed */}
             <div className="flex items-center rounded border border-border bg-panel p-0.5">
               <button

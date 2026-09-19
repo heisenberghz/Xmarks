@@ -106,4 +106,39 @@ describe('Importer & Deduplication Engine', () => {
     const result = parseAndDedupeBookmarks(rawBatch, []);
     expect(result.bookmarks.map((b) => b.id)).toEqual(['1', '2', '3']);
   });
+
+  it('correctly aligns existing bookmarks into the incoming scrape order without shoving them to the bottom', () => {
+    // Existing bookmark was id '2' with notes and tags
+    const preExisting: Bookmark = {
+      id: '2',
+      text: 'Second bookmark on X',
+      author_name: 'Author 2',
+      author_handle: '@author2',
+      avatar_url: '',
+      timestamp: '2026-05-01T00:00:00.000Z',
+      url: 'https://x.com/status/2',
+      media: [],
+      tags: ['my-important-tag'],
+      notes: 'My special note',
+      imported_at: '2026-05-01T00:00:00.000Z',
+      order: 10, // old order
+    };
+
+    // Incoming fresh scrape has 3 tweets: 1 (top of X), 2 (middle), 3 (bottom of X)
+    const freshScrape = [
+      { id: '1', text: 'Top tweet on X' },
+      { id: '2', text: 'Second tweet on X' },
+      { id: '3', text: 'Third tweet on X' },
+    ];
+
+    const result = parseAndDedupeBookmarks(freshScrape, [preExisting]);
+
+    // Order must be strictly ['1', '2', '3'] matching the top-to-bottom scrape!
+    expect(result.bookmarks.map((b) => b.id)).toEqual(['1', '2', '3']);
+
+    // Existing bookmark #2 must have its tags and notes preserved
+    const item2 = result.bookmarks.find((b) => b.id === '2');
+    expect(item2?.tags).toEqual(['my-important-tag']);
+    expect(item2?.notes).toBe('My special note');
+  });
 });

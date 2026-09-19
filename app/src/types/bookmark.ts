@@ -34,3 +34,5 @@ export interface ImportResult {
   totalParsed: number;
   bookmarks: Bookmark[];
 }
+
+export type SortMode = 'bookmarked' | 'date_desc' | 'date_asc';

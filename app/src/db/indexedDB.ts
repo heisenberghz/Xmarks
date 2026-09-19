@@ -1,4 +1,5 @@
 import { Bookmark } from '../types/bookmark';
+import { sortBookmarks } from '../lib/search';
 
 const DB_NAME = 'x_bookmarks_db';
 const DB_VERSION = 1;
@@ -30,15 +31,8 @@ export async function getAllBookmarksFromDB(): Promise<Bookmark[]> {
     const request = store.getAll();
 
     request.onsuccess = () => {
-      // Sort by original bookmark sequence order first, then fall back to timestamp
-      const list = (request.result as Bookmark[]).sort((a, b) => {
-        if (a.order !== undefined && b.order !== undefined) {
-          return b.order - a.order;
-        }
-        if (a.order !== undefined) return -1;
-        if (b.order !== undefined) return 1;
-        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-      });
+      const rawList = request.result as Bookmark[];
+      const list = sortBookmarks(rawList, 'bookmarked');
       resolve(list);
     };
     request.onerror = () => reject(request.error);

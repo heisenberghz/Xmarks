@@ -1,26 +1,72 @@
-import { Bookmark } from '../types/bookmark';
+import { Bookmark, SortMode } from '../types/bookmark';
+
+export function parseSafeTimestamp(ts?: string): number {
+  if (!ts) return 0;
+  const time = new Date(ts).getTime();
+  return isNaN(time) ? 0 : time;
+}
 
 export interface FilterOptions {
   searchQuery?: string;
   selectedTags?: string[];
   tagMatchMode?: 'OR' | 'AND';
+  sortMode?: SortMode;
 }
 
 /**
- * Filters bookmarks by search query and tag selection.
+ * Sorts an array of bookmarks according to the chosen SortMode.
+ * - 'bookmarked': Original sequence from X (the top bookmark on X appears first).
+ * - 'date_desc': Tweet publication date, newest first.
+ * - 'date_asc': Tweet publication date, oldest first.
+ */
+export function sortBookmarks(bookmarks: Bookmark[], sortMode: SortMode = 'bookmarked'): Bookmark[] {
+  return [...bookmarks].sort((a, b) => {
+    if (sortMode === 'date_desc') {
+      const tA = parseSafeTimestamp(a.timestamp);
+      const tB = parseSafeTimestamp(b.timestamp);
+      if (tB !== tA) return tB - tA;
+      return (b.order ?? 0) - (a.order ?? 0);
+    }
+    if (sortMode === 'date_asc') {
+      const tA = parseSafeTimestamp(a.timestamp);
+      const tB = parseSafeTimestamp(b.timestamp);
+      if (tA !== tB) return tA - tB;
+      return (a.order ?? 0) - (b.order ?? 0);
+    }
+
+    // Default: 'bookmarked' (Original X bookmarks order: index 0 is first)
+    const oA = a.order;
+    const oB = b.order;
+    if (oA !== undefined && oB !== undefined) {
+      if (oB !== oA) return oB - oA;
+    } else if (oA !== undefined) {
+      return -1;
+    } else if (oB !== undefined) {
+      return 1;
+    }
+
+    // Fall back to tweet timestamp if order is missing
+    const tA = parseSafeTimestamp(a.timestamp);
+    const tB = parseSafeTimestamp(b.timestamp);
+    return tB - tA;
+  });
+}
+
+/**
+ * Filters and sorts bookmarks by search query, tag selection, and sort mode.
  * Fast, pure client-side filter designed for personal collections (thousands of records).
  */
 export function filterBookmarks(
   bookmarks: Bookmark[],
   options: FilterOptions = {}
 ): Bookmark[] {
-  const { searchQuery = '', selectedTags = [], tagMatchMode = 'OR' } = options;
+  const { searchQuery = '', selectedTags = [], tagMatchMode = 'OR', sortMode } = options;
 
   const trimmedQuery = searchQuery.trim().toLowerCase();
   const searchTokens = trimmedQuery.length > 0 ? trimmedQuery.split(/\s+/).filter(Boolean) : [];
   const normalizedSelectedTags = selectedTags.map((t) => t.toLowerCase());
 
-  return bookmarks.filter((bookmark) => {
+  const filtered = bookmarks.filter((bookmark) => {
     // 1. Tag Filtering
     if (normalizedSelectedTags.length > 0) {
       const bookmarkTags = (bookmark.tags || []).map((t) => t.toLowerCase());
@@ -54,6 +100,8 @@ export function filterBookmarks(
 
     return true;
   });
+
+  return sortMode ? sortBookmarks(filtered, sortMode) : filtered;
 }
 
 /**

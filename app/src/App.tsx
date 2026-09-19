@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Bookmark, ImportResult } from './types/bookmark';
+import { Bookmark, ImportResult, SortMode } from './types/bookmark';
 import {
   getAllBookmarksFromDB,
   saveBookmarkToDB,
@@ -25,6 +25,7 @@ export const App: React.FC = () => {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'feed'>('grid');
+  const [sortMode, setSortMode] = useState<SortMode>('bookmarked');
 
   // Load from IndexedDB on startup
   useEffect(() => {
@@ -41,14 +42,15 @@ export const App: React.FC = () => {
     initDB();
   }, []);
 
-  // Filter bookmarks in real-time
+  // Filter and sort bookmarks in real-time
   const filteredBookmarks = useMemo(() => {
     return filterBookmarks(bookmarks, {
       searchQuery,
       selectedTags,
       tagMatchMode,
+      sortMode,
     });
-  }, [bookmarks, searchQuery, selectedTags, tagMatchMode]);
+  }, [bookmarks, searchQuery, selectedTags, tagMatchMode, sortMode]);
 
   // Extract all active tags and frequencies
   const allTagsWithCounts = useMemo(() => {
@@ -78,7 +80,17 @@ export const App: React.FC = () => {
     // Persist to IndexedDB
     await saveBookmarksBatchToDB(result.bookmarks);
     setBookmarks(result.bookmarks);
-    toast.success(`Imported ${result.added} new bookmarks (${result.skipped} duplicates skipped)`);
+    if (result.added > 0 && result.skipped > 0) {
+      toast.success(
+        `Imported ${result.added} new bookmarks & realigned ${result.skipped} to exact X bookmarks order`
+      );
+    } else if (result.added > 0) {
+      toast.success(`Imported ${result.added} new bookmarks in exact X bookmarks order`);
+    } else {
+      toast.success(
+        `All ${result.skipped} bookmarks synchronized and aligned to exact X bookmarks order`
+      );
+    }
     return result;
   };
 
@@ -154,6 +166,8 @@ export const App: React.FC = () => {
         onOpenImport={() => setIsImportOpen(true)}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
+        sortMode={sortMode}
+        onSortModeChange={setSortMode}
       />
 
       {/* Main Content Area (supports Masonry Grid & Linear Feed modes) */}

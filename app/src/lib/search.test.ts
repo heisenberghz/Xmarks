@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { filterBookmarks, getAllTagsWithCounts } from './search';
+import { filterBookmarks, getAllTagsWithCounts, sortBookmarks, parseSafeTimestamp } from './search';
 import { Bookmark } from '../types/bookmark';
 
 describe('Search & Tag Filtering Engine', () => {
@@ -100,5 +100,81 @@ describe('Search & Tag Filtering Engine', () => {
     const tagCounts = getAllTagsWithCounts(sampleBookmarks);
     expect(tagCounts[0]).toEqual({ tag: 'frontend', count: 2 });
     expect(tagCounts.find((t) => t.tag === 'ai')?.count).toBe(1);
+  });
+
+  describe('sortBookmarks', () => {
+    const items: Bookmark[] = [
+      {
+        id: 'A',
+        text: 'Tweet A',
+        author_name: 'A',
+        author_handle: '@a',
+        avatar_url: '',
+        timestamp: '2026-01-01T00:00:00.000Z',
+        url: '',
+        media: [],
+        tags: [],
+        notes: '',
+        imported_at: '',
+        order: 100, // bookmarked 3rd
+      },
+      {
+        id: 'B',
+        text: 'Tweet B',
+        author_name: 'B',
+        author_handle: '@b',
+        avatar_url: '',
+        timestamp: '2026-06-01T00:00:00.000Z',
+        url: '',
+        media: [],
+        tags: [],
+        notes: '',
+        imported_at: '',
+        order: 300, // bookmarked 1st (top on X)
+      },
+      {
+        id: 'C',
+        text: 'Tweet C',
+        author_name: 'C',
+        author_handle: '@c',
+        avatar_url: '',
+        timestamp: '2026-03-01T00:00:00.000Z',
+        url: '',
+        media: [],
+        tags: [],
+        notes: '',
+        imported_at: '',
+        order: 200, // bookmarked 2nd
+      },
+    ];
+
+    it('sorts by bookmarked order (highest order number first, matching top of X)', () => {
+      const sorted = sortBookmarks(items, 'bookmarked');
+      expect(sorted.map((i) => i.id)).toEqual(['B', 'C', 'A']);
+    });
+
+    it('sorts by tweet date descending (newest tweet first)', () => {
+      const sorted = sortBookmarks(items, 'date_desc');
+      expect(sorted.map((i) => i.id)).toEqual(['B', 'C', 'A']);
+    });
+
+    it('sorts by tweet date ascending (oldest tweet first)', () => {
+      const sorted = sortBookmarks(items, 'date_asc');
+      expect(sorted.map((i) => i.id)).toEqual(['A', 'C', 'B']);
+    });
+
+    it('handles missing, blank, or invalid timestamps safely without NaN sort corruption', () => {
+      const corruptItems: Bookmark[] = [
+        { ...items[0], id: 'bad-1', timestamp: '' },
+        { ...items[1], id: 'good-1', timestamp: '2026-05-01T00:00:00.000Z' },
+        { ...items[2], id: 'bad-2', timestamp: 'not-a-valid-date' },
+      ];
+
+      expect(parseSafeTimestamp('')).toBe(0);
+      expect(parseSafeTimestamp('invalid-date')).toBe(0);
+
+      const sorted = sortBookmarks(corruptItems, 'date_desc');
+      expect(sorted[0].id).toBe('good-1');
+    });
   });
 });
