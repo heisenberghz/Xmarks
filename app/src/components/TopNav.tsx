@@ -87,7 +87,7 @@ export const TopNav: React.FC<TopNavProps> = ({
     sortOptions.find((opt) => opt.value === sortMode)?.label || 'Recently Bookmarked';
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background">
+    <header className="sticky top-0 z-30 border-b border-border dark:border-white/10 bg-background">
       <div className="mx-auto max-w-[1600px] px-4 py-2.5 sm:px-6">
         {/* Main Command Bar Row */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

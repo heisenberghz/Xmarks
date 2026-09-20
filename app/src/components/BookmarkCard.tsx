@@ -54,7 +54,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
       className={`group relative flex flex-col justify-between break-inside-avoid rounded-2xl border bg-card p-4 transition-colors duration-150 cursor-pointer select-none ${
         isSelected
           ? 'border-black dark:border-accent/80 bg-cardHover ring-2 ring-black/15 dark:ring-accent/20'
-          : 'border-black dark:border-slate-700 hover:border-black/75 dark:hover:border-slate-500 hover:bg-cardHover'
+          : 'border-black dark:border-white/15 hover:border-black/75 dark:hover:border-white/30 hover:bg-cardHover'
       }`}
     >
       <div>
