@@ -29,6 +29,8 @@ export default {
         md: '6px',
         lg: '8px',
         xl: '12px',
+        '2xl': '16px',
+        '3xl': '20px',
       },
       fontFamily: {
         sans: ['"Inter Variable"', 'system-ui', '-apple-system', 'sans-serif'],

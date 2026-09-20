@@ -51,7 +51,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
   return (
     <article
       onClick={() => onClick(bookmark)}
-      className={`group relative flex flex-col justify-between break-inside-avoid rounded-lg border bg-card p-4 transition-colors duration-150 cursor-pointer select-none ${
+      className={`group relative flex flex-col justify-between break-inside-avoid rounded-2xl border bg-card p-4 transition-colors duration-150 cursor-pointer select-none ${
         isSelected
           ? 'border-accent/60 bg-cardHover ring-0'
           : 'border-border hover:border-borderHover hover:bg-cardHover'
@@ -147,7 +147,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
 
         {/* Media Thumbnail Container */}
         {bookmark.media && bookmark.media.length > 0 && (
-          <div className="mt-3 overflow-hidden rounded-md border border-border bg-slate-100 dark:bg-black/40">
+          <div className="mt-3 overflow-hidden rounded-xl border border-border bg-slate-100 dark:bg-black/40">
             <div className="relative w-full overflow-hidden max-h-72">
               <img
                 src={bookmark.media[0]}
@@ -156,7 +156,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
                 className="w-full h-auto max-h-72 object-cover transition-opacity duration-200"
               />
               {bookmark.media.length > 1 && (
-                <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded bg-black/80 px-2 py-0.5 text-[10px] font-mono font-medium text-white border border-border">
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-md bg-black/80 px-2 py-0.5 text-[10px] font-mono font-medium text-white border border-border">
                   <ImageIcon className="h-3 w-3" />
                   <span>+{bookmark.media.length - 1}</span>
                 </div>
@@ -167,7 +167,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
 
         {/* Personal Notes Preview */}
         {bookmark.notes && (
-          <div className="mt-3 flex items-start gap-2 rounded-md bg-panel/70 px-2.5 py-1.5 text-[11.5px] text-muted border border-border">
+          <div className="mt-3 flex items-start gap-2 rounded-lg bg-panel/70 px-2.5 py-1.5 text-[11.5px] text-muted border border-border">
             <MessageSquare className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted" />
             <span className="line-clamp-2 italic text-foreground/80 leading-relaxed">{bookmark.notes}</span>
           </div>
@@ -183,7 +183,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
               <span
                 key={tag}
                 onClick={(e) => onTagClick(tag, e)}
-                className={`rounded px-2 py-0.5 text-[11px] font-medium border transition-colors cursor-pointer hover:border-borderHover hover:text-foreground ${color.bg} ${color.text} ${color.border}`}
+                className={`rounded-md px-2 py-0.5 text-[11px] font-medium border transition-colors cursor-pointer hover:border-borderHover hover:text-foreground ${color.bg} ${color.text} ${color.border}`}
               >
                 #{tag}
               </span>
