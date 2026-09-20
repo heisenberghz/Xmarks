@@ -94,7 +94,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           {/* Brand Identity & Status */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded bg-panel border border-border font-mono text-xs font-bold text-foreground">
+              <span className="flex h-7 w-7 items-center justify-center rounded bg-panel border border-black dark:border-border font-mono text-xs font-bold text-foreground">
                 𝕏
               </span>
               <h1 className="text-sm font-semibold tracking-[-0.01em] text-foreground">
@@ -102,7 +102,7 @@ export const TopNav: React.FC<TopNavProps> = ({
               </h1>
             </div>
 
-            <div className="flex items-center gap-1.5 rounded bg-panel px-2.5 py-0.5 text-xs text-muted border border-border">
+            <div className="flex items-center gap-1.5 rounded bg-panel px-2.5 py-0.5 text-xs text-muted border border-black dark:border-border">
               <span className="font-semibold text-foreground">{filteredCount}</span>
               {filteredCount !== totalCount && (
                 <span className="text-muted/70">/ {totalCount}</span>
@@ -119,7 +119,7 @@ export const TopNav: React.FC<TopNavProps> = ({
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search keywords, @author, tags, or notes..."
-              className="w-full rounded border border-border bg-panel py-1.5 pl-10 pr-12 text-xs text-foreground placeholder:text-muted focus:border-accent/60 focus:outline-none transition-colors font-normal"
+              className="w-full rounded border border-black dark:border-border bg-panel py-1.5 pl-10 pr-12 text-xs text-foreground placeholder:text-muted focus:border-black dark:focus:border-accent/60 focus:outline-none transition-colors font-normal"
             />
             {searchQuery ? (
               <button
@@ -130,7 +130,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 <X className="h-3.5 w-3.5" />
               </button>
             ) : (
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono font-medium text-muted/60 bg-card border border-border rounded px-1.5 py-0.5 pointer-events-none select-none">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono font-medium text-muted/60 bg-card border border-black dark:border-border rounded px-1.5 py-0.5 pointer-events-none select-none">
                 /
               </span>
             )}
@@ -142,7 +142,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             <div className="relative" ref={sortDropdownRef}>
               <button
                 onClick={() => setIsSortOpen(!isSortOpen)}
-                className="flex items-center gap-1.5 rounded border border-border bg-panel hover:bg-card hover:border-borderHover px-2.5 py-1 text-xs font-medium text-foreground transition-colors"
+                className="flex items-center gap-1.5 rounded border border-black dark:border-border bg-panel hover:bg-card hover:border-black/70 dark:hover:border-borderHover px-2.5 py-1 text-xs font-medium text-foreground transition-colors"
                 title="Change bookmark sorting"
               >
                 <ArrowUpDown className="h-3.5 w-3.5 text-muted" />
@@ -154,7 +154,7 @@ export const TopNav: React.FC<TopNavProps> = ({
 
               {/* Dropdown Menu */}
               {isSortOpen && (
-                <div className="absolute right-0 mt-1.5 w-64 rounded-lg border border-border bg-panel p-1 z-50 shadow-none">
+                <div className="absolute right-0 mt-1.5 w-64 rounded-lg border border-black dark:border-border bg-panel p-1 z-50 shadow-none">
                   <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted/70">
                     Sort Bookmarks By
                   </div>
@@ -204,7 +204,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             {/* Light / Dark Mode Toggle Button */}
             <button
               onClick={onToggleTheme}
-              className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-border hover:border-borderHover px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
+              className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
               title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               aria-label="Toggle light/dark theme"
             >
@@ -221,7 +221,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             {/* Flat Solid Import Action */}
             <button
               onClick={onOpenImport}
-              className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-border hover:border-borderHover px-3 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
+              className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-3 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
             >
               <Upload className="h-3.5 w-3.5 text-muted group-hover:text-foreground" />
               <span className="text-[11px]">Import</span>
@@ -231,7 +231,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             {totalCount > 0 && onOpenClearAll && (
               <button
                 onClick={onOpenClearAll}
-                className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 border border-border hover:border-red-200 dark:hover:border-red-900/50 px-2.5 py-1.5 text-xs font-medium text-muted dark:hover:text-red-400 transition-colors"
+                className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 border border-black dark:border-border hover:border-red-600 dark:hover:border-red-900/50 px-2.5 py-1.5 text-xs font-medium text-muted dark:hover:text-red-400 transition-colors"
                 title="Clear all bookmarks from local storage"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -254,7 +254,7 @@ export const TopNav: React.FC<TopNavProps> = ({
               <button
                 onClick={onToggleTagMatchMode}
                 title="Toggle tag filter logic"
-                className="rounded border border-border bg-panel px-1.5 py-0.5 text-[10px] font-mono font-semibold text-foreground uppercase hover:bg-card transition-colors"
+                className="rounded border border-black dark:border-border bg-panel px-1.5 py-0.5 text-[10px] font-mono font-semibold text-foreground uppercase hover:bg-card transition-colors"
               >
                 {tagMatchMode}
               </button>
@@ -271,8 +271,8 @@ export const TopNav: React.FC<TopNavProps> = ({
                     onClick={() => onToggleTag(tag)}
                     className={`flex items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium transition-colors border ${
                       isSelected
-                        ? 'border-accent/60 bg-cardHover text-foreground font-semibold'
-                        : 'border-border bg-panel text-muted hover:border-borderHover hover:text-foreground hover:bg-cardHover'
+                        ? 'border-black dark:border-accent/60 bg-cardHover text-foreground font-semibold'
+                        : 'border-black dark:border-border bg-panel text-muted hover:border-black/70 dark:hover:border-borderHover hover:text-foreground hover:bg-cardHover'
                     }`}
                   >
                     <span>#{tag}</span>
