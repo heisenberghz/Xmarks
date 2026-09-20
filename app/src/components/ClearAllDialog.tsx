@@ -33,7 +33,7 @@ export const ClearAllDialog: React.FC<ClearAllDialogProps> = ({
             className="w-full max-w-md rounded-lg border border-border bg-panel p-5 space-y-4 shadow-none"
           >
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-red-950/40 border border-red-900/50 text-red-400">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-red-50 border border-red-200 text-red-600 dark:bg-red-950/40 dark:border-red-900/50 dark:text-red-400">
                 <Trash2 className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">

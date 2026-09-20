@@ -15,9 +15,11 @@ import { DetailPanel } from './components/DetailPanel';
 import { ImportModal } from './components/ImportModal';
 import { DeleteDialog } from './components/DeleteDialog';
 import { ClearAllDialog } from './components/ClearAllDialog';
+import { useTheme } from './lib/useTheme';
 import { Toaster, toast } from 'sonner';
 
 export const App: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -179,6 +181,8 @@ export const App: React.FC = () => {
         onOpenClearAll={() => setIsClearAllOpen(true)}
         sortMode={sortMode}
         onSortModeChange={setSortMode}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       {/* Main Content Area (Interlocking Masonry Grid) */}
@@ -232,13 +236,13 @@ export const App: React.FC = () => {
 
       {/* Toast Notification Provider */}
       <Toaster
-        theme="dark"
+        theme={theme}
         position="bottom-right"
         toastOptions={{
           style: {
-            background: '#18181b',
-            border: '1px solid #27272a',
-            color: '#fafafa',
+            background: theme === 'dark' ? '#111216' : '#ffffff',
+            border: theme === 'dark' ? '1px solid #1b1c22' : '1px solid #e2e8f0',
+            color: theme === 'dark' ? '#f1f3f7' : '#0f172a',
             fontFamily: 'Inter Variable, system-ui, sans-serif',
           },
         }}

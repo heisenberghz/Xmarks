@@ -119,7 +119,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
                   onDelete(bookmark.id, e);
                 }}
                 title="Remove bookmark"
-                className="rounded p-1 text-muted hover:bg-red-950/40 hover:text-red-400 transition-colors"
+                className="rounded p-1 text-muted hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -147,7 +147,7 @@ export const BookmarkCard: React.FC<BookmarkCardProps> = ({
 
         {/* Media Thumbnail Container */}
         {bookmark.media && bookmark.media.length > 0 && (
-          <div className="mt-3 overflow-hidden rounded-md border border-border bg-black/40">
+          <div className="mt-3 overflow-hidden rounded-md border border-border bg-slate-100 dark:bg-black/40">
             <div className="relative w-full overflow-hidden max-h-72">
               <img
                 src={bookmark.media[0]}

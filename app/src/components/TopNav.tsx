@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Upload, X, Tag as TagIcon, ArrowUpDown, Check, Trash2 } from 'lucide-react';
+import { Search, Upload, X, Tag as TagIcon, ArrowUpDown, Check, Trash2, Sun, Moon } from 'lucide-react';
 import { SortMode } from '../types/bookmark';
 
 interface TopNavProps {
@@ -17,6 +17,8 @@ interface TopNavProps {
   onOpenClearAll?: () => void;
   sortMode: SortMode;
   onSortModeChange: (mode: SortMode) => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 const sortOptions: { value: SortMode; label: string; desc: string }[] = [
@@ -52,6 +54,8 @@ export const TopNav: React.FC<TopNavProps> = ({
   onOpenClearAll,
   sortMode,
   onSortModeChange,
+  theme,
+  onToggleTheme,
 }) => {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
@@ -196,6 +200,23 @@ export const TopNav: React.FC<TopNavProps> = ({
             </div>
 
 
+            {/* Light / Dark Mode Toggle Button */}
+            <button
+              onClick={onToggleTheme}
+              className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-border hover:border-borderHover px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label="Toggle light/dark theme"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-3.5 w-3.5 text-muted hover:text-foreground transition-colors" />
+              ) : (
+                <Moon className="h-3.5 w-3.5 text-muted hover:text-foreground transition-colors" />
+              )}
+              <span className="hidden sm:inline text-[11px] text-muted hover:text-foreground capitalize">
+                {theme === 'dark' ? 'Light' : 'Dark'}
+              </span>
+            </button>
+
             {/* Flat Solid Import Action */}
             <button
               onClick={onOpenImport}
@@ -209,7 +230,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             {totalCount > 0 && onOpenClearAll && (
               <button
                 onClick={onOpenClearAll}
-                className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-red-950/30 border border-border hover:border-red-900/50 px-2.5 py-1.5 text-xs font-medium text-muted hover:text-red-400 transition-colors"
+                className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 border border-border hover:border-red-200 dark:hover:border-red-900/50 px-2.5 py-1.5 text-xs font-medium text-muted dark:hover:text-red-400 transition-colors"
                 title="Clear all bookmarks from local storage"
               >
                 <Trash2 className="h-3.5 w-3.5" />

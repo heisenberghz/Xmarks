@@ -91,14 +91,14 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between pb-3.5 border-b border-border">
               <div className="flex items-center gap-2">
-                <FileJson className="h-4 w-4 text-zinc-300" />
+                <FileJson className="h-4 w-4 text-muted" />
                 <h3 className="text-sm font-semibold tracking-tight text-foreground">
                   Import Bookmarks JSON
                 </h3>
               </div>
               <button
                 onClick={handleClose}
-                className="rounded p-1 text-muted hover:bg-zinc-800 hover:text-foreground transition-colors"
+                className="rounded p-1 text-muted hover:bg-cardHover hover:text-foreground transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>

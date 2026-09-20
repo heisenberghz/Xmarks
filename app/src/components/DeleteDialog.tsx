@@ -31,7 +31,7 @@ export const DeleteDialog: React.FC<DeleteDialogProps> = ({
             className="w-full max-w-sm rounded-lg border border-border bg-panel p-5 space-y-4"
           >
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-red-950/40 border border-red-900/50 text-red-400">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded bg-red-50 border border-red-200 text-red-600 dark:bg-red-950/40 dark:border-red-900/50 dark:text-red-400">
                 <AlertTriangle className="h-4 w-4" />
               </div>
               <div>

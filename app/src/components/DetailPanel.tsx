@@ -654,7 +654,7 @@ export const DetailPanel: React.FC<DetailPanelProps> = ({
             <div className="border-t border-border bg-panel px-5 py-3 flex items-center justify-between shrink-0 select-none">
               <button
                 onClick={() => onDeleteBookmark(bookmark.id)}
-                className="flex items-center gap-1.5 rounded px-2.5 py-1.5 text-xs font-medium text-red-400/90 hover:text-red-300 hover:bg-red-950/30 border border-red-900/40 hover:border-red-800 transition-colors"
+                className="flex items-center gap-1.5 rounded px-2.5 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 hover:border-red-300 dark:text-red-400/90 dark:hover:text-red-300 dark:hover:bg-red-950/30 dark:border-red-900/40 dark:hover:border-red-800 transition-colors"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 <span>Remove from storage</span>

@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,20 +8,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#07080a', // Pitch-dark obsidian base (subtle dark depth, not hard blue)
-        panel: '#0d0e12',       // Elevated dark panel
-        card: '#111216',        // Deep dark card surface
-        cardHover: '#16171d',   // Subtle dark hover fill
-        border: '#1b1c22',      // Hairline dark border
-        borderHover: '#282a33', // Active/hover border
+        background: 'rgb(var(--color-background) / <alpha-value>)',
+        panel: 'rgb(var(--color-panel) / <alpha-value>)',
+        card: 'rgb(var(--color-card) / <alpha-value>)',
+        cardHover: 'rgb(var(--color-card-hover) / <alpha-value>)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
+        borderHover: 'rgb(var(--color-border-hover) / <alpha-value>)',
         accent: {
-          DEFAULT: '#94a3b8',   // Refined cool steel slate (no saturated neon blue)
-          hover: '#cbd5e1',
-          subtle: 'rgba(148, 163, 184, 0.08)',
+          DEFAULT: 'rgb(var(--color-accent) / <alpha-value>)',
+          hover: 'rgb(var(--color-accent-hover) / <alpha-value>)',
+          subtle: 'var(--color-accent-subtle)',
         },
-        muted: '#787f8f',       // Restrained cool slate text
-        foreground: '#f1f3f7',  // Crisp off-white
-        danger: '#f85149',
+        muted: 'rgb(var(--color-muted) / <alpha-value>)',
+        foreground: 'rgb(var(--color-foreground) / <alpha-value>)',
+        danger: 'rgb(var(--color-danger) / <alpha-value>)',
       },
       borderRadius: {
         DEFAULT: '6px',
