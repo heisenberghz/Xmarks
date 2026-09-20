@@ -39,3 +39,9 @@ Desktop.ini
 # Temporary data / exports
 *.tmp
 *.temp
+
+# Personal bookmark exports & scraper dumps (privacy safeguard)
+bookmarks-export*.json
+bookmarks*.json
+!sample-data/bookmarks-export-sample.json
+*.local.json
