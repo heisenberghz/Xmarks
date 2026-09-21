@@ -1,136 +1,131 @@
-# 🔖 X Bookmarks Manager & Scraper
+# 🔖 Xmarks — Your X (Twitter) Bookmarks, Finally Organized
 
-A private, zero-API-cost, local-first tool to export, organize, search, and annotate your X (Twitter) bookmarks in a Pinterest-style masonry interface.
+> **A private, free, and local-first tool to export, organize, search, and browse your X (Twitter) bookmarks in a beautiful Pinterest-style masonry grid.**
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-![React 18](https://img.shields.io/badge/React-18.3-blue?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css)
-![Vite](https://img.shields.io/badge/Vite-6.1-646CFF?logo=vite)
-![Chrome MV3](https://img.shields.io/badge/Chrome_Extension-Manifest_V3-green?logo=google-chrome)
-![Tests](https://img.shields.io/badge/Tests-41%20passing-brightgreen)
-![Local--First](https://img.shields.io/badge/Privacy-100%25%20Local--First-success)
+[![MIT License](https://img.shields.io/badge/License-MIT-3b82f6.svg)](./LICENSE)
+[![React 18](https://img.shields.io/badge/React-18.3-61dafb?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38b2ac?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-6.1-646cff?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Chrome Extension](https://img.shields.io/badge/Chrome_Extension-Manifest_V3-10b981?logo=google-chrome&logoColor=white)](./extension)
+[![Test Suite](https://img.shields.io/badge/Tests-41%20passing-10b981)](./tests)
+[![Privacy First](https://img.shields.io/badge/Privacy-100%25%20Local--First-8b5cf6)](#-privacy-first--no-cloud-needed)
 
 ---
 
-## 📸 Screenshots
+## 📸 See It in Action
 
-| Dark Mode (Elevated Surface & Silver Hairline) | Light Mode (Crisp High-Contrast Black Border) |
+| 🌙 Dark Mode (Elevated Slate & Silver Hairline) | ☀️ Light Mode (High-Contrast Crisp Borders) |
 |:---:|:---:|
-| ![Dark Mode](./screenshots/Screenshot%20(366).png) | ![Light Mode](./screenshots/Screenshot%20(368).png) |
+| ![Dark Mode Screenshot](./screenshots/dark-mode-preview.png) | ![Light Mode Screenshot](./screenshots/light-mode-preview.png) |
 
 ---
 
-## 💡 Why This Exists
+## 😫 The Problem: Twitter Bookmarks Are a Black Hole
 
-- **X (Twitter) bookmark search is locked behind Premium subscriptions**, and the official X API charges prohibitive pricing ($100+/month for basic developer tiers).
-- Your bookmarks represent years of curated knowledge: tutorials, code snippets, engineering discussions, design systems, and threads.
-- **X Bookmarks Manager** gives you back 100% ownership:
-  - 🔒 **Zero Telemetry & Zero Cloud Servers**: Data stays in your browser's local `IndexedDB`.
-  - 💸 **Zero API Fees**: Extracts bookmarks directly from your authenticated browser session.
-  - ⚡ **Lightning-Fast Offline Search**: Sub-millisecond instant fuzzy filtering across thousands of tweets.
+If you use X (Twitter), you probably bookmark amazing threads, tutorials, code snippets, design ideas, and industry news every day.
 
----
-
-## ✨ Features
-
-- 📥 **Two Scraper Options**:
-  - **Method A (Zero-install Console Script)**: Paste a single snippet into Chrome DevTools on `x.com/i/bookmarks` and watch it harvest and download your bookmarks.
-  - **Method B (Chrome Extension MV3)**: Load unpacked extension, click **Scrape Bookmarks**, monitor live progress in the popup, and download a clean JSON export.
-- 📌 **Pinterest-Style Masonry Grid**:
-  - Custom responsive multi-column masonry layout (`1` to `4` columns).
-  - 16px rounded card corners (`rounded-2xl`) with nested 12px media containers (`rounded-xl`).
-  - High-contrast card borders (crisp 1px black in Light Mode, silver hairline on elevated surface in Dark Mode).
-  - Auto-linked URLs, `@mentions`, and `#hashtags`.
-- 🌓 **High-Contrast Dark & Light Themes**:
-  - Persistent theme switcher with system preference detection and anti-FOUC (Flash of Unstyled Content) boot script.
-- 🔍 **Instant Search & Multi-Criteria Filtering**:
-  - Real-time search across tweet text, author handles, display names, and your personal notes.
-  - Filter by author handle or name.
-  - Sort by newest or oldest bookmarked date.
-- 🏷️ **Custom Tags & Inline Annotations**:
-  - Tag bookmarks with custom labels (`#dev`, `#design`, `#ai`, `#readlater`).
-  - Add personal markdown notes to any bookmark with auto-saving to IndexedDB (debounced).
-- 🖼️ **Media Preview & Fullscreen Lightbox**:
-  - Single and multi-image galleries with carousel navigation.
-  - Video poster thumbnail preview with duration/play badge.
-  - Click any image for a modal lightbox view.
-- ⌨️ **Vim-Style Keyboard Navigation**:
-  - <kbd>J</kbd> / <kbd>K</kbd> or arrow keys to navigate cards.
-  - <kbd>/</kbd> to jump straight to the search bar.
-  - <kbd>Esc</kbd> to clear search or dismiss modals.
-  - <kbd>C</kbd> to deselect active bookmark.
-- 📦 **Export & Portability**:
-  - Export your entire library—including custom tags and notes—back to JSON anytime.
+**Here's the frustrating reality:**
+1. **You can never find anything again:** After saving a few hundred tweets, your bookmarks become an endless, single-column scroll where great content goes to die.
+2. **Search is locked behind a paywall:** X charges a monthly Premium subscription just to search your own saved bookmarks.
+3. **No way to organize:** You cannot add tags, categorize topics, or write notes explaining *why* you saved a tweet.
+4. **Expensive developer API:** Building your own simple scraper through the official API costs $100+/month.
+5. **No offline backup:** If an author deletes a tweet, or if your account is temporarily locked, your curated knowledge vanishes.
 
 ---
 
-## 🏗️ Repository Architecture
+## 💡 What Xmarks Solves
 
-```text
-x-bookmarks-manager/
-├── app/                              # Offline React + Vite + Tailwind web application
-│   ├── src/
-│   │   ├── components/               # TopNav, BookmarkCard, MasonryGrid, Lightbox, etc.
-│   │   ├── lib/                      # db.ts (IndexedDB), search.ts, linkify.ts, useTheme.ts
-│   │   ├── types/                    # Tweet and bookmark data types
-│   │   └── index.css                 # Theme tokens, surfaces, and high-contrast styling
-│   └── package.json                  # Web app dependencies & Vite config
-│
-├── extension/                        # Chrome Extension (Manifest V3)
-│   ├── manifest.json                 # Extension manifest (MV3)
-│   ├── popup.html & popup.js         # Extension popup UI with live harvest counter
-│   ├── background.js                 # Service worker message relay
-│   ├── content.js                    # In-page DOM scraper & virtual-scroll handler
-│   └── standalone/
-│       └── console-scraper.js        # Standalone zero-install DevTools scraper script
-│
-├── sample-data/
-│   └── bookmarks-export-sample.json  # Sanitized mock bookmark dataset for immediate testing
-│
-├── screenshots/                      # Application preview screenshots
-├── tests/                            # Vitest automated test suite (DOM extractor, scroller, etc.)
-├── .gitignore                        # Strict rules to safeguard personal bookmark exports
-└── package.json                      # Root workspace scripts & Vitest test runner
-```
+**Xmarks** gives you full ownership of your bookmarked knowledge:
+
+* 💸 **100% Free & Zero API Keys:** Export all your bookmarks directly from your authenticated browser session in seconds.
+* 📌 **Pinterest-Style Visual Board:** View 20+ bookmarks at a glance with rich image galleries and video thumbnails instead of scrolling one tweet at a time.
+* ⚡ **Instant Search (No Premium Required):** Find any bookmark in milliseconds. Search by keyword, author handle, author name, or even your own custom notes.
+* 🏷️ **Custom Tags:** Label bookmarks with tags like `#dev`, `#design`, `#ai`, `#readlater`, or `#marketing` and filter them with one click.
+* 📝 **Personal Notes:** Add private notes to any tweet. Perfect for remembering key takeaways or action items (auto-saved to your browser).
+* 🔒 **100% Private & Offline-First:** Everything runs locally on your machine using browser `IndexedDB`. Zero tracking, zero cloud databases, and zero analytics.
 
 ---
 
-## 🚀 Quick Start Guide
+## 📊 Comparison: Default Twitter vs. Xmarks
+
+| Feature | Default X (Twitter) | Official API Tier | 🔖 **Xmarks (This Project)** |
+|:---|:---:|:---:|:---:|
+| **Cost** | Free (view only) | $100+/month | **100% Free & Open Source** |
+| **Bookmark Search** | 🔒 Paid (X Premium required) | Developer setup needed | **⚡ Instant & Offline (No Subscription)** |
+| **Interface Layout** | Single-column infinite scroll | Raw JSON data | **📌 Pinterest-style Multi-column Masonry** |
+| **Custom Tags** | ❌ None | ❌ None | **✅ Unlimited custom tags (`#react`, `#ideas`)** |
+| **Personal Notes** | ❌ None | ❌ None | **✅ Inline notes per tweet with auto-save** |
+| **Media Preview** | Inline only | URLs only | **🖼️ Fullscreen lightbox & multi-image carousels** |
+| **Data Ownership** | Stored on X servers | Stored on your server | **🔒 100% Local (Saved in browser IndexedDB)** |
+| **Works Offline?** | ❌ No | ❌ No | **✅ Yes, completely offline** |
+
+---
+
+## ✨ Key Features in Detail
+
+### 1. 📥 Two Simple Ways to Export Your Bookmarks
+* **Option A — 10-Second Console Snippet (No install needed):** Open Chrome DevTools on your bookmarks page, paste the script from [`console-scraper.js`](./extension/standalone/console-scraper.js), and press Enter. It automatically scrolls humanly, harvests your bookmarks, deduplicates them, and downloads a clean JSON file.
+* **Option B — Chrome Extension (MV3):** Load the lightweight unpacked extension into Chrome, click **Scrape Bookmarks**, watch the live progress counter, and export when done.
+
+### 2. 📌 Pinterest-Style Responsive Grid
+* Modern **16px rounded curves** (`rounded-2xl`) with matching **12px inner media corners**.
+* **High-contrast styling:** Crisp 1px solid black borders in Light Mode, and elevated slate surfaces with subtle silver hairline borders in Dark Mode.
+* Auto-detects and turns plain text links, `@mentions`, and `#hashtags` into clickable links.
+
+### 3. 🔍 Blazing Fast Search & Tag Filters
+* Sub-millisecond search across all tweet content, author names, handles, and personal annotations.
+* Multi-select tag filters to narrow down your library in a click.
+* Sort easily by **Newest First** or **Oldest First**.
+
+### 4. 📝 Personal Notes & Annotations
+* Click **Add note** on any card to type your thoughts, summary, or reference links.
+* Automatically debounces and saves to IndexedDB as you type.
+
+### 5. ⌨️ Keyboard Shortcuts for Power Users
+| Shortcut | Action |
+|:---:|:---|
+| <kbd>J</kbd> / <kbd>K</kbd> | Navigate to next / previous bookmark |
+| <kbd>/</kbd> | Jump directly to search bar |
+| <kbd>Esc</kbd> | Clear search input or close image lightbox / modal |
+| <kbd>C</kbd> | Deselect currently active bookmark |
+
+---
+
+## 🚀 Getting Started
 
 ### Step 1: Export Your Bookmarks
 
-#### Option A: Standalone Console Script (Zero installation — fastest)
-1. In Google Chrome, go to [x.com/i/bookmarks](https://x.com/i/bookmarks) while logged in.
-2. Open Chrome DevTools (<kbd>F12</kbd> or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> / <kbd>Cmd</kbd>+<kbd>Option</kbd>+<kbd>I</kbd>).
+#### Method A: Standalone DevTools Console (Fastest — zero installation)
+1. In Google Chrome, navigate to [x.com/i/bookmarks](https://x.com/i/bookmarks) while logged in.
+2. Open DevTools (<kbd>F12</kbd> or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd> / <kbd>Cmd</kbd>+<kbd>Option</kbd>+<kbd>I</kbd>).
 3. Switch to the **Console** tab.
-4. Copy the entire code from [`extension/standalone/console-scraper.js`](./extension/standalone/console-scraper.js), paste it into the Console, and press <kbd>Enter</kbd>.
-5. The script will automatically scroll down, harvest visible tweets, deduplicate entries, and download `bookmarks-export-<timestamp>.json` when finished. (Run `window.__X_SCRAPER__.stop()` anytime to stop early).
+4. Copy the entire contents of [`extension/standalone/console-scraper.js`](./extension/standalone/console-scraper.js), paste it into the console, and hit <kbd>Enter</kbd>.
+5. The script will scroll and gather your tweets, then download `bookmarks-export-<timestamp>.json`. (You can run `window.__X_SCRAPER__.stop()` anytime to stop early).
 
-#### Option B: Load the Chrome Extension (Manifest V3)
+#### Method B: Unpacked Chrome Extension
 1. Open Chrome and navigate to `chrome://extensions/`.
-2. Turn on **Developer mode** (toggle in the top-right corner).
-3. Click **Load unpacked** (top-left) and select the `extension/` directory of this repo.
-4. Go to [x.com/i/bookmarks](https://x.com/i/bookmarks).
-5. Click the extension icon in your Chrome toolbar and click **Scrape Bookmarks**.
-6. When complete, click **Stop & Export** to download your JSON file.
+2. Toggle on **Developer mode** in the top-right corner.
+3. Click **Load unpacked** (top-left) and select the `extension` folder from this repository.
+4. Go to [x.com/i/bookmarks](https://x.com/i/bookmarks) and click the extension icon in your Chrome toolbar.
+5. Click **Scrape Bookmarks**, then click **Stop & Export** when done.
 
 ---
 
-### Step 2: Run the Web App
+### Step 2: Run the Web App Locally
 
-Make sure you have [Node.js](https://nodejs.org/) (v18+) installed.
+Make sure you have [Node.js](https://nodejs.org/) (v18 or higher) installed.
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/x-bookmarks-manager.git
-cd x-bookmarks-manager
+# 1. Clone this repository
+git clone https://github.com/heisenberghz/Xmarks.git
+cd Xmarks
 
 # 2. Install dependencies
 npm install
 cd app && npm install && cd ..
 
-# 3. Start the local development server
+# 3. Start the local server
 npm run dev
 ```
 
@@ -138,36 +133,84 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-### Step 3: Import & Browse
+### Step 3: Import & Enjoy!
 
-1. On the web app, click **Import** or drag and drop your exported `bookmarks-export-*.json` file.
-2. *Want to test without scraping first?* An example dataset is included at [`sample-data/bookmarks-export-sample.json`](./sample-data/bookmarks-export-sample.json) with sanitized public tweets.
-3. Your bookmarks are saved locally into your browser's IndexedDB and will persist across sessions.
+1. Click **Import** on the top navigation bar or drag-and-drop your exported `.json` file.
+2. *Want to test right away without exporting?* A mock dataset is included at [`sample-data/bookmarks-export-sample.json`](./sample-data/bookmarks-export-sample.json).
+3. All bookmarks are saved to your browser's local **IndexedDB** and will stay there even if you refresh or close the tab.
 
 ---
 
-## 🧪 Running Tests
+## 🏗️ Project Architecture
 
-The test suite covers DOM tweet extraction, multi-image and video poster parsing, virtual scroll unmounting, deduplication, search ranking, and theme logic:
-
-```bash
-# Run Vitest across all 8 test suites (41 tests)
-npm test
+```text
+Xmarks/
+├── app/                              # Offline React + Vite + Tailwind web app
+│   ├── src/
+│   │   ├── components/               # TopNav, BookmarkCard, MasonryGrid, Lightbox, FilterBar
+│   │   ├── lib/                      # db.ts (IndexedDB), search.ts, linkify.ts, useTheme.ts
+│   │   ├── types/                    # Data models for tweets, media, notes, and tags
+│   │   └── index.css                 # Custom design tokens, high-contrast borders & surfaces
+│   └── package.json                  # Web app dependencies & Vite config
+│
+├── extension/                        # Manifest V3 Chrome Extension
+│   ├── manifest.json                 # Extension configuration
+│   ├── popup.html & popup.js         # Extension UI with live scraping counter
+│   ├── background.js                 # Service worker message handler
+│   ├── content.js                    # In-page DOM harvester & virtual-scroll handler
+│   └── standalone/
+│       └── console-scraper.js        # Zero-install standalone DevTools scraper
+│
+├── sample-data/
+│   └── bookmarks-export-sample.json  # Sanitized sample dataset for instant testing
+│
+├── screenshots/                      # UI previews and showcase screenshots
+├── tests/                            # Vitest unit test suite (DOM parsing, scroller, deduplication)
+├── .gitignore                        # Strict rules to keep personal bookmark dumps private
+├── LICENSE                           # Open source MIT license
+└── package.json                      # Root workspace scripts (dev, build, test)
 ```
 
-To run a production build of the web app:
+---
+
+## 🧪 Testing & Verification
+
+The automated test suite verifies DOM tweet extraction, multi-image and video poster parsing, virtual scroll unmounting, deduplication, search ranking, and theme logic:
 
 ```bash
+# Run Vitest across all test suites (41 tests)
+npm test
+
+# Run production build check
 npm run build
 ```
 
 ---
 
-## 🔒 Privacy & Local-First Philosophy
+## 🔒 Privacy First — No Cloud Needed
 
-- **100% Client-Side**: All data processing and storage happens entirely inside your browser.
-- **No Remote Servers**: There are no external databases, analytics trackers, or third-party servers.
-- **Git Safeguards**: Personal bookmark files (`bookmarks-export*.json`, `bookmarks*.json`, `*.local.json`) are strictly excluded in [`.gitignore`](./.gitignore) to prevent accidental commits of personal data.
+* **Zero Cloud Storage:** Your bookmarks and notes are stored strictly inside your browser's local IndexedDB.
+* **Zero Telemetry:** No tracking, no cookies, no third-party analytics scripts.
+* **Safe Git Defaults:** [`.gitignore`](./.gitignore) is pre-configured to ignore all personal `bookmarks-export*.json` files so you never accidentally push personal bookmarks to GitHub.
+
+---
+
+## ❓ Frequently Asked Questions
+
+<details>
+<summary><b>Will my X (Twitter) account get banned or flagged?</b></summary>
+<p>No. Both the extension and console script simply scroll down the page and read the tweets that are already rendered in your browser, exactly as if you were scrolling by hand. They do not send automated API requests or bypass any security checks.</p>
+</details>
+
+<details>
+<summary><b>Do I need to pay for Twitter / X Premium?</b></summary>
+<p>No! That is the whole point of Xmarks. You can scrape and search through all your bookmarks without paying for any subscription.</p>
+</details>
+
+<details>
+<summary><b>Can I backup or export my data again?</b></summary>
+<p>Yes. The web app includes an <b>Export</b> button that lets you download your entire enriched library (including your custom tags and notes) into a JSON backup file at any time.</p>
+</details>
 
 ---
 
