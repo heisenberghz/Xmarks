@@ -172,4 +172,43 @@ describe('batchTagBookmarksLocally', () => {
     expect(updatedBookmarks[1].tags).toContain('already-tagged');
     expect(updatedBookmarks[1].tags).toContain('resources');
   });
+
+  it('assigns #untagged fallback to bookmarks that do not match any category', () => {
+    const unmatchedBookmark: Bookmark = {
+      id: '3',
+      text: 'China found something better than oil',
+      author_handle: '@maxinomics',
+      author_name: 'Max',
+      avatar_url: '',
+      timestamp: '2026-05-10T12:00:00Z',
+      url: 'https://x.com/maxinomics/status/3',
+      media: [],
+      tags: [],
+      notes: '',
+      imported_at: '2026-05-10T12:00:00Z',
+    };
+
+    const tags = autoTagBookmarkLocally(unmatchedBookmark);
+    expect(tags).toEqual(['untagged']);
+  });
+
+  it('replaces #untagged label when real category tags are discovered later', () => {
+    const previouslyUntagged: Bookmark = {
+      id: '4',
+      text: 'Deep dive into React 19 compiler and Next.js',
+      author_handle: '@dev',
+      author_name: 'Dev',
+      avatar_url: '',
+      timestamp: '2026-05-10T12:00:00Z',
+      url: 'https://x.com/dev/status/4',
+      media: [],
+      tags: ['untagged'],
+      notes: '',
+      imported_at: '2026-05-10T12:00:00Z',
+    };
+
+    const tags = autoTagBookmarkLocally(previouslyUntagged);
+    expect(tags).toContain('dev');
+    expect(tags).not.toContain('untagged');
+  });
 });

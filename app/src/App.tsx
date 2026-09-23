@@ -68,7 +68,9 @@ export const App: React.FC = () => {
   }, [allTagsWithCounts]);
 
   const untaggedCount = useMemo(() => {
-    return bookmarks.filter((b) => !b.tags || b.tags.length === 0).length;
+    return bookmarks.filter(
+      (b) => !b.tags || b.tags.length === 0 || (b.tags.length === 1 && b.tags[0].toLowerCase() === 'untagged')
+    ).length;
   }, [bookmarks]);
 
   const handleApplyAutoTags = useCallback(async (updatedBookmarks: Bookmark[]) => {

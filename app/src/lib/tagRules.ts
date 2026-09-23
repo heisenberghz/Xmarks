@@ -81,16 +81,23 @@ export function matchCategoriesForBookmark(
 /**
  * Auto-tags a single bookmark using local offline rules and native hashtags.
  * Guaranteed to NEVER remove or overwrite existing manual tags.
+ * If no tags match and assignUntaggedFallback is true, assigns ['untagged'].
+ * If existing tags only had 'untagged', it replaces it with the newly discovered tags.
  * 
  * @param bookmark The bookmark to tag
  * @param maxTags Maximum total tags to assign (default: 4)
+ * @param assignUntaggedFallback Whether to assign ['untagged'] if no tags matched (default: true)
  * @returns An array of tags combining existing manual tags and new matched tags
  */
 export function autoTagBookmarkLocally(
   bookmark: Bookmark,
-  maxTags: number = 4
+  maxTags: number = 4,
+  assignUntaggedFallback: boolean = true
 ): string[] {
-  const existingTags = bookmark.tags || [];
+  // If the bookmark only has the temporary 'untagged' label, treat it as empty for new tag discovery
+  const rawExisting = bookmark.tags || [];
+  const hadUntaggedOnly = rawExisting.length === 1 && rawExisting[0].toLowerCase() === 'untagged';
+  const existingTags = hadUntaggedOnly ? [] : rawExisting.filter((t) => t.toLowerCase() !== 'untagged');
   const existingSet = new Set(existingTags.map((t) => t.toLowerCase()));
 
   // 1. Find taxonomy category matches
@@ -124,6 +131,11 @@ export function autoTagBookmarkLocally(
     result.push(candidate);
   }
 
+  // If still completely untagged, apply the #untagged label so it's filterable in the UI
+  if (result.length === 0 && assignUntaggedFallback) {
+    return ['untagged'];
+  }
+
   return result;
 }
 
@@ -132,21 +144,24 @@ export function autoTagBookmarkLocally(
  */
 export function batchTagBookmarksLocally(
   bookmarks: Bookmark[],
-  options: { untaggedOnly?: boolean; maxTags?: number } = {}
+  options: { untaggedOnly?: boolean; maxTags?: number; assignUntaggedFallback?: boolean } = {}
 ): { updatedBookmarks: Bookmark[]; changedCount: number } {
-  const { untaggedOnly = false, maxTags = 4 } = options;
+  const { untaggedOnly = false, maxTags = 4, assignUntaggedFallback = true } = options;
   let changedCount = 0;
 
   const updatedBookmarks = bookmarks.map((b) => {
-    // If untaggedOnly is true, skip bookmarks that already have at least 1 tag
-    if (untaggedOnly && b.tags && b.tags.length > 0) {
+    const rawTags = b.tags || [];
+    const isUntagged = rawTags.length === 0 || (rawTags.length === 1 && rawTags[0].toLowerCase() === 'untagged');
+
+    // If untaggedOnly is true, skip bookmarks that already have meaningful tags
+    if (untaggedOnly && !isUntagged) {
       return b;
     }
 
-    const newTags = autoTagBookmarkLocally(b, maxTags);
+    const newTags = autoTagBookmarkLocally(b, maxTags, assignUntaggedFallback);
     const hasChanged =
-      newTags.length !== (b.tags || []).length ||
-      newTags.some((t, i) => t !== (b.tags || [])[i]);
+      newTags.length !== rawTags.length ||
+      newTags.some((t, i) => t !== rawTags[i]);
 
     if (hasChanged) {
       changedCount++;

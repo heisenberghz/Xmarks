@@ -33,7 +33,9 @@ export const AutoTagModal: React.FC<AutoTagModalProps> = ({
 
   // Statistics
   const totalCount = bookmarks.length;
-  const untaggedCount = bookmarks.filter((b) => !b.tags || b.tags.length === 0).length;
+  const untaggedCount = bookmarks.filter(
+    (b) => !b.tags || b.tags.length === 0 || (b.tags.length === 1 && b.tags[0].toLowerCase() === 'untagged')
+  ).length;
   const taggedCount = totalCount - untaggedCount;
 
   const handleRunLocalAutoTag = async () => {
@@ -235,6 +237,14 @@ export const AutoTagModal: React.FC<AutoTagModalProps> = ({
                           </div>
                         );
                       })}
+                      {result.categoryCounts['untagged'] > 0 && (
+                        <div className="flex items-center justify-between rounded bg-panel px-2.5 py-1.5 border border-border dark:border-white/5 col-span-2 text-muted">
+                          <span className="font-medium">#untagged (needs review)</span>
+                          <span className="font-mono font-semibold text-foreground">
+                            {result.categoryCounts['untagged']}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
