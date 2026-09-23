@@ -13,6 +13,7 @@ import { TopNav } from './components/TopNav';
 import { MasonryGrid } from './components/MasonryGrid';
 import { DetailPanel } from './components/DetailPanel';
 import { ImportModal } from './components/ImportModal';
+import { AutoTagModal } from './components/AutoTagModal';
 import { DeleteDialog } from './components/DeleteDialog';
 import { ClearAllDialog } from './components/ClearAllDialog';
 import { useTheme } from './lib/useTheme';
@@ -26,6 +27,7 @@ export const App: React.FC = () => {
   const [tagMatchMode, setTagMatchMode] = useState<'OR' | 'AND'>('OR');
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [isAutoTagOpen, setIsAutoTagOpen] = useState(false);
   const [isClearAllOpen, setIsClearAllOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,6 +66,16 @@ export const App: React.FC = () => {
   const allTagNames = useMemo(() => {
     return allTagsWithCounts.map((t) => t.tag);
   }, [allTagsWithCounts]);
+
+  const untaggedCount = useMemo(() => {
+    return bookmarks.filter((b) => !b.tags || b.tags.length === 0).length;
+  }, [bookmarks]);
+
+  const handleApplyAutoTags = useCallback(async (updatedBookmarks: Bookmark[]) => {
+    await saveBookmarksBatchToDB(updatedBookmarks);
+    setBookmarks(updatedBookmarks);
+    toast.success('Auto-tags saved to local storage!');
+  }, []);
 
   // Handlers
   const handleToggleTag = (tag: string) => {
@@ -177,7 +189,9 @@ export const App: React.FC = () => {
         }
         totalCount={bookmarks.length}
         filteredCount={filteredBookmarks.length}
+        untaggedCount={untaggedCount}
         onOpenImport={() => setIsImportOpen(true)}
+        onOpenAutoTag={() => setIsAutoTagOpen(true)}
         onOpenClearAll={() => setIsClearAllOpen(true)}
         sortMode={sortMode}
         onSortModeChange={setSortMode}
@@ -217,6 +231,14 @@ export const App: React.FC = () => {
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
         onImportFile={handleImportFile}
+      />
+
+      {/* Auto-Tagging Modal */}
+      <AutoTagModal
+        isOpen={isAutoTagOpen}
+        onClose={() => setIsAutoTagOpen(false)}
+        bookmarks={bookmarks}
+        onApplyTags={handleApplyAutoTags}
       />
 
       {/* Delete Single Bookmark Confirmation Modal */}

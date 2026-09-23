@@ -42,7 +42,6 @@ export function matchCategoriesForBookmark(
   const text = (bookmark.text || '').toLowerCase();
   const authorHandle = (bookmark.author_handle || '').toLowerCase();
   const authorName = (bookmark.author_name || '').toLowerCase();
-  const fullText = `${text} ${authorHandle} ${authorName}`;
 
   const matchedTags = new Set<string>();
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Upload, X, Tag as TagIcon, ArrowUpDown, Check, Trash2, Sun, Moon } from 'lucide-react';
+import { Search, Upload, X, Tag as TagIcon, ArrowUpDown, Check, Trash2, Sun, Moon, Sparkles } from 'lucide-react';
 import { SortMode } from '../types/bookmark';
 
 interface TopNavProps {
@@ -13,7 +13,9 @@ interface TopNavProps {
   onToggleTagMatchMode: () => void;
   totalCount: number;
   filteredCount: number;
+  untaggedCount?: number;
   onOpenImport: () => void;
+  onOpenAutoTag?: () => void;
   onOpenClearAll?: () => void;
   sortMode: SortMode;
   onSortModeChange: (mode: SortMode) => void;
@@ -50,7 +52,9 @@ export const TopNav: React.FC<TopNavProps> = ({
   onToggleTagMatchMode,
   totalCount,
   filteredCount,
+  untaggedCount = 0,
   onOpenImport,
+  onOpenAutoTag,
   onOpenClearAll,
   sortMode,
   onSortModeChange,
@@ -217,6 +221,23 @@ export const TopNav: React.FC<TopNavProps> = ({
                 {theme === 'dark' ? 'Light' : 'Dark'}
               </span>
             </button>
+
+            {/* Auto-Tag Action Button */}
+            {totalCount > 0 && onOpenAutoTag && (
+              <button
+                onClick={onOpenAutoTag}
+                className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
+                title="Auto-tag bookmarks using smart taxonomy"
+              >
+                <Sparkles className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
+                <span className="text-[11px] font-medium">Auto-Tag</span>
+                {untaggedCount > 0 && (
+                  <span className="ml-0.5 rounded-full bg-amber-500/15 px-1.5 py-0.2 text-[9.5px] font-semibold text-amber-600 dark:text-amber-400 font-mono">
+                    {untaggedCount}
+                  </span>
+                )}
+              </button>
+            )}
 
             {/* Flat Solid Import Action */}
             <button
