@@ -95,7 +95,7 @@ export const AutoTagModal: React.FC<AutoTagModalProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between pb-4 border-b border-border dark:border-white/10">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-card border border-black dark:border-white/15 text-foreground">
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div>
@@ -122,20 +122,20 @@ export const AutoTagModal: React.FC<AutoTagModalProps> = ({
                   {/* Status Banner */}
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="rounded-lg border border-border dark:border-white/10 bg-card p-2.5">
-                      <div className="text-xs text-muted">Total</div>
-                      <div className="text-base font-bold text-foreground font-mono">
+                      <div className="text-[11px] text-muted font-medium">Total</div>
+                      <div className="text-base font-bold text-foreground font-mono mt-0.5">
                         {totalCount}
                       </div>
                     </div>
-                    <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-2.5">
-                      <div className="text-xs text-amber-600 dark:text-amber-400 font-medium">Untagged</div>
-                      <div className="text-base font-bold text-amber-600 dark:text-amber-400 font-mono">
+                    <div className="rounded-lg border border-border dark:border-white/10 bg-card p-2.5">
+                      <div className="text-[11px] text-muted font-medium">Untagged</div>
+                      <div className="text-base font-bold text-foreground font-mono mt-0.5">
                         {untaggedCount}
                       </div>
                     </div>
-                    <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-2.5">
-                      <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Already Tagged</div>
-                      <div className="text-base font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+                    <div className="rounded-lg border border-border dark:border-white/10 bg-card p-2.5">
+                      <div className="text-[11px] text-muted font-medium">Already Tagged</div>
+                      <div className="text-base font-bold text-foreground font-mono mt-0.5">
                         {taggedCount}
                       </div>
                     </div>

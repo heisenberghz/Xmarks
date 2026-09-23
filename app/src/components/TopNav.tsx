@@ -141,12 +141,13 @@ export const TopNav: React.FC<TopNavProps> = ({
           </div>
 
           {/* Right Controls: Sort, View Switcher & Import */}
-          <div className="flex items-center gap-2">
+          {/* Right Controls: Sort, Theme, Auto-Tag, Import, Clear All */}
+          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
             {/* Sort Mode Dropdown */}
             <div className="relative" ref={sortDropdownRef}>
               <button
                 onClick={() => setIsSortOpen(!isSortOpen)}
-                className="flex items-center gap-1.5 rounded border border-black dark:border-border bg-panel hover:bg-card hover:border-black/70 dark:hover:border-borderHover px-2.5 py-1 text-xs font-medium text-foreground transition-colors"
+                className="flex h-8 items-center gap-1.5 rounded border border-black dark:border-border bg-panel hover:bg-card hover:border-black/70 dark:hover:border-borderHover px-2.5 text-xs font-medium text-foreground transition-colors"
                 title="Change bookmark sorting"
               >
                 <ArrowUpDown className="h-3.5 w-3.5 text-muted" />
@@ -203,12 +204,10 @@ export const TopNav: React.FC<TopNavProps> = ({
               )}
             </div>
 
-
-
             {/* Light / Dark Mode Toggle Button */}
             <button
               onClick={onToggleTheme}
-              className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
+              className="flex h-8 items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-2.5 text-xs font-medium text-foreground transition-colors active:scale-95"
               title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               aria-label="Toggle light/dark theme"
             >
@@ -226,13 +225,13 @@ export const TopNav: React.FC<TopNavProps> = ({
             {totalCount > 0 && onOpenAutoTag && (
               <button
                 onClick={onOpenAutoTag}
-                className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
+                className="group flex h-8 items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-2.5 text-xs font-medium text-foreground transition-colors active:scale-95"
                 title="Auto-tag bookmarks using smart taxonomy"
               >
-                <Sparkles className="h-3.5 w-3.5 text-amber-500 fill-amber-500/20" />
+                <Sparkles className="h-3.5 w-3.5 text-muted group-hover:text-foreground transition-colors" />
                 <span className="text-[11px] font-medium">Auto-Tag</span>
                 {untaggedCount > 0 && (
-                  <span className="ml-0.5 rounded-full bg-amber-500/15 px-1.5 py-0.2 text-[9.5px] font-semibold text-amber-600 dark:text-amber-400 font-mono">
+                  <span className="ml-0.5 rounded px-1.5 py-0.5 text-[9.5px] font-mono font-semibold bg-card dark:bg-card border border-black/10 dark:border-white/10 text-muted group-hover:text-foreground transition-colors">
                     {untaggedCount}
                   </span>
                 )}
@@ -242,9 +241,9 @@ export const TopNav: React.FC<TopNavProps> = ({
             {/* Flat Solid Import Action */}
             <button
               onClick={onOpenImport}
-              className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-3 py-1.5 text-xs font-medium text-foreground transition-colors active:scale-95"
+              className="group flex h-8 items-center justify-center gap-1.5 rounded bg-panel hover:bg-card border border-black dark:border-border hover:border-black/70 dark:hover:border-borderHover px-3 text-xs font-medium text-foreground transition-colors active:scale-95"
             >
-              <Upload className="h-3.5 w-3.5 text-muted group-hover:text-foreground" />
+              <Upload className="h-3.5 w-3.5 text-muted group-hover:text-foreground transition-colors" />
               <span className="text-[11px]">Import</span>
             </button>
 
@@ -252,7 +251,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             {totalCount > 0 && onOpenClearAll && (
               <button
                 onClick={onOpenClearAll}
-                className="flex items-center justify-center gap-1.5 rounded bg-panel hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 border border-black dark:border-border hover:border-red-600 dark:hover:border-red-900/50 px-2.5 py-1.5 text-xs font-medium text-muted dark:hover:text-red-400 transition-colors"
+                className="flex h-8 items-center justify-center gap-1.5 rounded bg-panel hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 border border-black dark:border-border hover:border-red-600 dark:hover:border-red-900/50 px-2.5 text-xs font-medium text-muted dark:hover:text-red-400 transition-colors"
                 title="Clear all bookmarks from local storage"
               >
                 <Trash2 className="h-3.5 w-3.5" />
