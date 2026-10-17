@@ -1,9 +1,11 @@
 /**
  * Chrome Extension Popup Controller
- * Manages user triggers, tab checking, and live status polling.
+ * Manages dashboard launching, live capture status, and bulk scraper.
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const openDashboardBtn = document.getElementById('openDashboardBtn');
+  const openSidePanelBtn = document.getElementById('openSidePanelBtn');
   const actionBtn = document.getElementById('actionBtn');
   const statusDot = document.getElementById('statusDot');
   const statusText = document.getElementById('statusText');
@@ -12,43 +14,55 @@ document.addEventListener('DOMContentLoaded', async () => {
   let activeTabId = null;
   let pollInterval = null;
   let isCurrentlyScraping = false;
+  let isBookmarksPage = false;
 
-  // 1. Locate active tab
+  // 1. Dashboard Launcher Handlers (Always available on any tab)
+  openDashboardBtn.addEventListener('click', () => {
+    chrome.runtime.sendMessage({ action: 'OPEN_DASHBOARD' });
+    window.close();
+  });
+
+  openSidePanelBtn.addEventListener('click', () => {
+    chrome.runtime.sendMessage({ action: 'OPEN_SIDE_PANEL' });
+    window.close();
+  });
+
+  // 2. Locate active tab for bulk scraper
   try {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tabs || tabs.length === 0) {
-      showError('Cannot access current tab.');
-      return;
+    if (tabs && tabs.length > 0) {
+      const tab = tabs[0];
+      activeTabId = tab.id;
+      const url = tab.url || '';
+
+      isBookmarksPage =
+        url.includes('x.com/i/bookmarks') ||
+        url.includes('twitter.com/i/bookmarks') ||
+        url.includes('x.com/i/history') ||
+        url.includes('twitter.com/i/history');
+
+      if (!isBookmarksPage) {
+        showNavigateState();
+      } else {
+        checkStatus();
+        startPolling();
+      }
     }
-
-    const tab = tabs[0];
-    activeTabId = tab.id;
-    const url = tab.url || '';
-
-    const isBookmarksUrl =
-      url.includes('x.com/i/bookmarks') ||
-      url.includes('twitter.com/i/bookmarks') ||
-      url.includes('x.com/i/history') ||
-      url.includes('twitter.com/i/history');
-
-    if (!isBookmarksUrl) {
-      showDisabledState("Please navigate to x.com/i/history (Bookmarks tab) to scrape.");
-      return;
-    }
-
-    // Tab is valid, poll initial status
-    checkStatus();
-    startPolling();
   } catch (err) {
     showError(err.message || 'Initialization failed.');
   }
 
-  // 2. Button Action Handler
+  // 3. Bulk Scraper Button Action Handler
   actionBtn.addEventListener('click', async () => {
+    if (!isBookmarksPage) {
+      chrome.tabs.create({ url: 'https://x.com/i/bookmarks' });
+      window.close();
+      return;
+    }
+
     if (!activeTabId) return;
 
     if (isCurrentlyScraping) {
-      // User clicked "Stop & Export"
       actionBtn.disabled = true;
       actionBtn.textContent = 'Stopping...';
       try {
@@ -58,7 +72,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         showError('Failed to stop scraping: ' + err.message);
       }
     } else {
-      // User clicked "Scrape Bookmarks"
       actionBtn.disabled = true;
       actionBtn.textContent = 'Starting...';
       try {
@@ -126,9 +139,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     pollInterval = setInterval(checkStatus, 600);
   }
 
+  function showNavigateState() {
+    actionBtn.disabled = false;
+    actionBtn.textContent = 'Go to Bookmarks on X';
+    actionBtn.className = 'btn btn-primary';
+    statusDot.className = 'status-indicator active';
+    statusText.textContent = 'Live Capture Active';
+    noticeText.textContent = 'Auto-captures bookmarks on X. Click above to visit bookmarks page.';
+    if (pollInterval) clearInterval(pollInterval);
+  }
+
   function showDisabledState(message) {
     actionBtn.disabled = true;
-    actionBtn.textContent = 'Scrape Bookmarks';
+    actionBtn.textContent = 'Scrape Bookmarks Page';
     actionBtn.className = 'btn btn-primary';
     statusDot.className = 'status-indicator error';
     statusText.textContent = 'Inactive';

@@ -14,10 +14,18 @@ describe('Chrome Extension Manifest & Files Verification', () => {
     expect(manifest.manifest_version).toBe(3);
     expect(manifest.name).toBe('X Bookmarks Exporter');
     expect(manifest.permissions).toContain('downloads');
+    expect(manifest.permissions).toContain('sidePanel');
+    expect(manifest.permissions).toContain('unlimitedStorage');
+    expect(manifest.permissions).toContain('storage');
     expect(manifest.host_permissions).toContain('https://x.com/i/bookmarks*');
     expect(manifest.host_permissions).toContain('https://twitter.com/i/bookmarks*');
     expect(manifest.host_permissions).toContain('https://x.com/i/history*');
     expect(manifest.host_permissions).toContain('https://twitter.com/i/history*');
+
+    // Check dashboard and side panel
+    expect(manifest.side_panel.default_path).toBe('dashboard/index.html');
+    const dashboardHtml = path.join(extensionDir, manifest.side_panel.default_path);
+    expect(fs.existsSync(dashboardHtml)).toBe(true);
 
     // Check referenced files exist
     const bgScript = path.join(extensionDir, manifest.background.service_worker);

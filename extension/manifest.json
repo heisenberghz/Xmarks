@@ -1,27 +1,37 @@
 {
   "manifest_version": 3,
   "name": "X Bookmarks Exporter",
-  "version": "1.0.1",
-  "description": "Scrape and export your X (Twitter) bookmarks to JSON for local indexing and tagging.",
+  "version": "1.1.0",
+  "description": "Live capture, bulk exporter, and visual personal dashboard for X (Twitter) bookmarks.",
   "permissions": [
-    "downloads"
+    "downloads",
+    "storage",
+    "unlimitedStorage",
+    "sidePanel"
   ],
   "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*",
     "https://x.com/i/bookmarks*",
     "https://twitter.com/i/bookmarks*",
     "https://x.com/i/history*",
     "https://twitter.com/i/history*"
   ],
   "action": {
-    "default_title": "X Bookmarks Exporter",
+    "default_title": "X Bookmarks Manager",
     "default_popup": "src/popup.html"
   },
   "background": {
     "service_worker": "src/background.js"
   },
+  "side_panel": {
+    "default_path": "dashboard/index.html"
+  },
   "content_scripts": [
     {
       "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*",
         "https://x.com/i/bookmarks*",
         "https://twitter.com/i/bookmarks*",
         "https://x.com/i/history*",

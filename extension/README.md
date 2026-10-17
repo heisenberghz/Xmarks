@@ -1,51 +1,58 @@
-# X (Twitter) Bookmarks Exporter — Phase 1
+# 𝕏 Bookmarks Manager — Chrome Extension & Dashboard (v1.1)
 
-This folder contains the **Component 1 (Scraper & Exporter)** implementation of the X Bookmarks Manager.
-
----
-
-## Method A: Standalone Console Scraper (Fastest, zero installation)
-
-If you want to quickly scrape and download your bookmarks right now:
-
-1. In Google Chrome, go to [https://x.com/i/bookmarks](https://x.com/i/bookmarks).
-2. Ensure you are logged in and your bookmarks are displayed.
-3. Open Chrome DevTools (`F12` or `Ctrl + Shift + I` / `Cmd + Option + I`).
-4. Switch to the **Console** tab.
-5. Copy the entire contents of [`extension/standalone/console-scraper.js`](./standalone/console-scraper.js) and paste it into the Console, then press **Enter**.
-6. The script will scroll humanly, harvest visible tweets, deduplicate, and display live counts:
-   ```
-   [X Bookmarks Scraper] +12 new bookmarks (Total: 48)
-   ```
-7. When it reaches the end (or if you run `window.__X_SCRAPER__.stop()`), Chrome will automatically download `bookmarks-export-<timestamp>.json`.
+All-in-one personal Chrome Extension with **Live Auto-Capture**, **Built-in Visual Dashboard**, and **Bulk Timeline Scraper** for your X (Twitter) bookmarks.
 
 ---
 
-## Method B: Load Chrome Extension (Manifest V3)
+## 🚀 Features
 
-1. Open Chrome and go to `chrome://extensions/`.
-2. Toggle **Developer mode** ON (in the top right corner).
-3. Click **Load unpacked** (top left).
+1. **Integrated Offline Dashboard**:
+   - The entire React + Tailwind web app runs directly inside the extension (`chrome-extension://...`).
+   - Open as a **Full-Screen Tab** or in the **Chrome Side Panel** alongside Twitter.
+   - **Zero terminal or dev servers needed.**
+2. **⚡ Live Auto-Capture**:
+   - When browsing on `x.com`, clicking the native **Bookmark** button (or pressing <kbd>B</kbd>) automatically captures the tweet and saves it straight into your manager database.
+   - Shows a subtle, sleek confirmation toast: `🔖 Saved to X Bookmarks Manager`.
+3. **🔄 Live Direct Sync & Bulk Scraper**:
+   - Bulk scrapes your entire bookmark timeline from `x.com/i/bookmarks`.
+   - Directly saves all bookmarks into the local database without manual file uploads, while also saving a `.json` backup.
+4. **Private & Local-First**:
+   - All bookmarks, notes, and tags stay stored locally in your browser's IndexedDB.
+
+---
+
+## 🛠️ How to Load into Chrome (Takes 30 Seconds)
+
+1. Open Chrome and navigate to `chrome://extensions/`.
+2. Toggle **Developer mode** to **ON** (top right corner).
+3. Click **Load unpacked** (top left corner).
 4. Select the `D:\X bookmarks manager\extension` directory.
-5. Navigate to [https://x.com/i/bookmarks](https://x.com/i/bookmarks).
-6. Click the extension icon in your Chrome toolbar.
-7. Click **Scrape Bookmarks**.
-8. You can close the popup while it scrapes — progress continues in the background. Reopening the popup will show the live count.
-9. Click **Stop & Export** (or wait for it to finish) to download your bookmarks JSON.
+5. Click the puzzle icon (🧩) in your Chrome toolbar and **pin** the **X Bookmarks Manager** icon.
 
 ---
 
-## Automated Tests
+## 💡 Everyday Usage
 
-To run the automated DOM and extractor tests:
+### 1. View & Search Bookmarks (No Terminal Needed!)
+- Click the extension icon in Chrome.
+- Click **"🚀 Open Full Dashboard"** (or **"📑 Open in Side Panel"**).
+- Your full Masonry Grid, search bar, tags, and notes editor open instantly!
+
+### 2. Auto-Capture Tweets While Browsing
+- Browse normally on `x.com`.
+- Whenever you see a tweet you like, click the **Bookmark** ribbon button (or press <kbd>B</kbd>).
+- It is saved directly to your local library!
+
+### 3. Bulk Sync Your Entire Library
+- Navigate to [https://x.com/i/bookmarks](https://x.com/i/bookmarks).
+- Click the extension icon → **"Scrape Bookmarks Page"**.
+- Watch the live counter. When done, your library is fully populated and synchronized!
+
+---
+
+## 🧪 Automated Tests
+
+Run the full automated test suite (58 unit & DOM tests):
 ```bash
 npm test
 ```
-All 14 unit tests cover:
-- Text tweet parsing (`@handle`, display name, tweet ID, ISO timestamp)
-- Multi-photo tweet parsing
-- Video poster thumbnail extraction
-- Quoted tweet separation (preventing handle/permalink clobbering)
-- Rate-limit and login prompt detection
-- Virtual scroll unmounting and deduplication logic
-- Manifest V3 structure and permission validation

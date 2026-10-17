@@ -254,6 +254,17 @@
     const filename = `bookmarks-export-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
     const jsonContent = JSON.stringify(collectedBookmarks, null, 2);
 
+    // 1. Direct Sync: Stream straight into extension IndexedDB
+    try {
+      chrome.runtime.sendMessage({
+        action: 'SYNC_BOOKMARKS_BATCH',
+        bookmarks: collectedBookmarks,
+      });
+    } catch (e) {
+      console.warn('[Content] Direct batch sync failed, using file backup:', e);
+    }
+
+    // 2. Download backup file
     try {
       chrome.runtime.sendMessage(
         { action: 'DOWNLOAD_JSON', filename, jsonContent },
@@ -348,6 +359,126 @@
       triggerExport();
     }
   }
+
+  // ========================================================
+  // Live Capture on X: Auto-save on Bookmark click or shortcut
+  // ========================================================
+
+  function showLiveCaptureToast(message) {
+    let toast = document.getElementById('__xbm_live_toast__');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = '__xbm_live_toast__';
+      toast.style.position = 'fixed';
+      toast.style.bottom = '24px';
+      toast.style.right = '24px';
+      toast.style.backgroundColor = '#0b0e11';
+      toast.style.color = '#f0f3f6';
+      toast.style.border = '1px solid #1d9bf0';
+      toast.style.padding = '10px 16px';
+      toast.style.borderRadius = '9999px';
+      toast.style.fontSize = '12px';
+      toast.style.fontWeight = '600';
+      toast.style.boxShadow = '0 8px 24px rgba(0,0,0,0.5), 0 0 12px rgba(29,155,240,0.35)';
+      toast.style.zIndex = '999999999';
+      toast.style.display = 'flex';
+      toast.style.alignItems = 'center';
+      toast.style.gap = '8px';
+      toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+      toast.style.pointerEvents = 'none';
+      toast.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#1d9bf0;"></span> ${message}`;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+
+    clearTimeout(toast.__timer);
+    toast.__timer = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(8px)';
+    }, 2400);
+  }
+
+  // Intercept click on bookmark button anywhere on X
+  document.addEventListener(
+    'click',
+    (event) => {
+      const target = event.target;
+      if (!target) return;
+      const btn = target.closest(
+        '[data-testid="bookmark"], [data-testid="removeBookmark"], button[aria-label*="Bookmark" i], button[aria-label*="Bookmarked" i]'
+      );
+      if (!btn) return;
+
+      const testId = btn.getAttribute('data-testid') || '';
+      const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
+      const isRemoving =
+        testId === 'removeBookmark' ||
+        ariaLabel.includes('remove') ||
+        ariaLabel.includes('bookmarked');
+
+      if (isRemoving) {
+        // User is unbookmarking this tweet
+        return;
+      }
+
+      const article = btn.closest('article[data-testid="tweet"], article');
+      if (!article) return;
+
+      const tweetData = extractTweet(article);
+      if (!tweetData || !tweetData.id) return;
+
+      chrome.runtime.sendMessage(
+        { action: 'LIVE_BOOKMARK_CAPTURED', tweet: tweetData },
+        (res) => {
+          if (res && res.success) {
+            showLiveCaptureToast('🔖 Saved to X Bookmarks Manager');
+          }
+        }
+      );
+    },
+    true
+  );
+
+  // Keyboard shortcut: pressing 'B' on X when tweet is focused
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'b' || e.key === 'B') {
+      const activeEl = document.activeElement;
+      if (
+        activeEl &&
+        (activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          activeEl.isContentEditable)
+      ) {
+        return;
+      }
+      const article =
+        activeEl?.closest('article[data-testid="tweet"], article') ||
+        document.querySelector('article[data-testid="tweet"]:hover');
+
+      if (article) {
+        setTimeout(() => {
+          const bookmarkBtn = article.querySelector(
+            '[data-testid="removeBookmark"], [aria-label*="Bookmarked" i]'
+          );
+          if (bookmarkBtn) {
+            const tweetData = extractTweet(article);
+            if (tweetData && tweetData.id) {
+              chrome.runtime.sendMessage(
+                { action: 'LIVE_BOOKMARK_CAPTURED', tweet: tweetData },
+                (res) => {
+                  if (res && res.success) {
+                    showLiveCaptureToast('🔖 Saved to X Bookmarks Manager');
+                  }
+                }
+              );
+            }
+          }
+        }, 150);
+      }
+    }
+  });
 
   // Chrome runtime message handling
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

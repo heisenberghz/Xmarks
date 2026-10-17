@@ -48,6 +48,48 @@ export const App: React.FC = () => {
     initDB();
   }, []);
 
+  // Listen for Live Capture / Direct Sync events from Chrome Extension
+  useEffect(() => {
+    const chromeApi = (
+      window as unknown as {
+        chrome?: {
+          runtime?: {
+            onMessage?: {
+              addListener: (cb: (msg: any) => void) => void;
+              removeListener: (cb: (msg: any) => void) => void;
+            };
+          };
+        };
+      }
+    ).chrome;
+
+    const onMessage = chromeApi?.runtime?.onMessage;
+    if (onMessage) {
+      const handleMessage = (message: any) => {
+        if (message?.action === 'LIVE_BOOKMARK_ADDED' && message?.bookmark) {
+          const newBookmark: Bookmark = message.bookmark;
+          setBookmarks((prev) => {
+            if (prev.some((b) => b.id === newBookmark.id)) {
+              return prev.map((b) => (b.id === newBookmark.id ? { ...b, ...newBookmark } : b));
+            }
+            return [newBookmark, ...prev];
+          });
+          toast.success(
+            `Live: Saved bookmark from @${newBookmark.author_handle || newBookmark.author_name || 'X'}`
+          );
+        } else if (message?.action === 'BOOKMARKS_BATCH_SYNCED') {
+          getAllBookmarksFromDB().then((stored) => setBookmarks(stored));
+          toast.success('Live Sync: Bookmarks library refreshed');
+        }
+      };
+
+      onMessage.addListener(handleMessage);
+      return () => {
+        onMessage.removeListener(handleMessage);
+      };
+    }
+  }, []);
+
   // Filter and sort bookmarks in real-time
   const filteredBookmarks = useMemo(() => {
     return filterBookmarks(bookmarks, {
