@@ -5,7 +5,27 @@ const DB_NAME = 'x_bookmarks_db';
 const DB_VERSION = 1;
 const STORE_NAME = 'bookmarks';
 
+/**
+ * Requests persistent storage from the browser to prevent automatic
+ * cache eviction of bookmarks during disk cleanup or long periods of inactivity.
+ */
+export async function ensureStoragePersistence(): Promise<boolean> {
+  if (typeof navigator !== 'undefined' && navigator.storage && navigator.storage.persist) {
+    try {
+      const isPersisted = await navigator.storage.persisted();
+      if (!isPersisted) {
+        return await navigator.storage.persist();
+      }
+      return isPersisted;
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
 export function openBookmarksDB(): Promise<IDBDatabase> {
+  ensureStoragePersistence().catch(() => {});
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
 

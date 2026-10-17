@@ -141,4 +141,63 @@ describe('Importer & Deduplication Engine', () => {
     expect(item2?.tags).toEqual(['my-important-tag']);
     expect(item2?.notes).toBe('My special note');
   });
+
+  it('guarantees identical chronological order regardless of whether new or old batch is imported first (bidirectional stitching)', () => {
+    // Batch New (Oct 17): tweets N1, N2, and Bridge
+    const batchNew = [
+      { id: '2111000000000000001', text: 'Brand new tweet today 1', timestamp: '2026-10-17T12:00:00Z' },
+      { id: '2111000000000000002', text: 'Brand new tweet today 2', timestamp: '2026-10-17T11:00:00Z' },
+      { id: '2101000000000000001', text: 'Overlapping bridge tweet', timestamp: '2026-09-18T10:00:00Z' },
+    ];
+
+    // Batch Old (Sept 19): Bridge, O1, O2
+    const batchOld = [
+      { id: '2101000000000000001', text: 'Overlapping bridge tweet', timestamp: '2026-09-18T10:00:00Z' },
+      { id: '2091000000000000001', text: 'Older archive tweet 1', timestamp: '2026-08-01T10:00:00Z' },
+      { id: '2081000000000000001', text: 'Older archive tweet 2', timestamp: '2026-07-01T10:00:00Z' },
+    ];
+
+    // Case A: Import New first, then Old second (User's scenario today)
+    const step1A = parseAndDedupeBookmarks(batchNew, []);
+    const step2A = parseAndDedupeBookmarks(batchOld, step1A.bookmarks);
+
+    // Case B: Import Old first, then New second (Reverse order)
+    const step1B = parseAndDedupeBookmarks(batchOld, []);
+    const step2B = parseAndDedupeBookmarks(batchNew, step1B.bookmarks);
+
+    const expectedOrder = [
+      '2111000000000000001', // Newest 1
+      '2111000000000000002', // Newest 2
+      '2101000000000000001', // Bridge
+      '2091000000000000001', // Old 1
+      '2081000000000000001', // Old 2
+    ];
+
+    expect(step2A.bookmarks.map((b) => b.id)).toEqual(expectedOrder);
+    expect(step2B.bookmarks.map((b) => b.id)).toEqual(expectedOrder);
+  });
+
+  it('correctly orders disjoint non-overlapping batches using Twitter Snowflake timestamps', () => {
+    // Two batches with 0 overlapping tweets
+    const batchRecent = [
+      { id: '2111000000000000001', text: 'Recent 1', timestamp: '2026-10-17T12:00:00Z' },
+      { id: '2111000000000000002', text: 'Recent 2', timestamp: '2026-10-17T11:00:00Z' },
+    ];
+
+    const batchHistorical = [
+      { id: '2011000000000000001', text: 'Historical 1', timestamp: '2025-01-01T12:00:00Z' },
+      { id: '2011000000000000002', text: 'Historical 2', timestamp: '2025-01-01T11:00:00Z' },
+    ];
+
+    // Importing historical into recent should place historical below recent
+    const step1 = parseAndDedupeBookmarks(batchRecent, []);
+    const step2 = parseAndDedupeBookmarks(batchHistorical, step1.bookmarks);
+
+    expect(step2.bookmarks.map((b) => b.id)).toEqual([
+      '2111000000000000001',
+      '2111000000000000002',
+      '2011000000000000001',
+      '2011000000000000002',
+    ]);
+  });
 });

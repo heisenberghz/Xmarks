@@ -7,7 +7,7 @@ import {
   deleteBookmarkFromDB,
   clearAllBookmarksFromDB,
 } from './db/indexedDB';
-import { parseAndDedupeBookmarks } from './lib/importer';
+import { parseAndDedupeBookmarks, realignBookmarksChronology } from './lib/importer';
 import { filterBookmarks, getAllTagsWithCounts } from './lib/search';
 import { TopNav } from './components/TopNav';
 import { MasonryGrid } from './components/MasonryGrid';
@@ -112,6 +112,15 @@ export const App: React.FC = () => {
     return result;
   };
 
+  const handleRealignOrder = useCallback(async () => {
+    if (bookmarks.length === 0) return;
+    const realigned = realignBookmarksChronology(bookmarks);
+    await saveBookmarksBatchToDB(realigned);
+    setBookmarks(realigned);
+    setSortMode('bookmarked');
+    toast.success(`Realigned ${realigned.length} bookmarks to exact Twitter timeline chronology`);
+  }, [bookmarks]);
+
   const handleUpdateBookmark = useCallback(async (updated: Bookmark) => {
     await saveBookmarkToDB(updated);
     setBookmarks((prev) =>
@@ -197,6 +206,7 @@ export const App: React.FC = () => {
         onOpenClearAll={() => setIsClearAllOpen(true)}
         sortMode={sortMode}
         onSortModeChange={setSortMode}
+        onRealignOrder={handleRealignOrder}
         theme={theme}
         onToggleTheme={toggleTheme}
       />

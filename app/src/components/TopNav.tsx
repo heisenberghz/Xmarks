@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Upload, X, Tag as TagIcon, ArrowUpDown, Check, Trash2, Sun, Moon, Sparkles } from 'lucide-react';
+import { Search, Upload, X, Tag as TagIcon, ArrowUpDown, Check, Trash2, Sun, Moon, Sparkles, RefreshCw } from 'lucide-react';
 import { SortMode } from '../types/bookmark';
 
 interface TopNavProps {
@@ -19,6 +19,7 @@ interface TopNavProps {
   onOpenClearAll?: () => void;
   sortMode: SortMode;
   onSortModeChange: (mode: SortMode) => void;
+  onRealignOrder?: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
 }
@@ -58,6 +59,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   onOpenClearAll,
   sortMode,
   onSortModeChange,
+  onRealignOrder,
   theme,
   onToggleTheme,
 }) => {
@@ -200,6 +202,32 @@ export const TopNav: React.FC<TopNavProps> = ({
                       </button>
                     );
                   })}
+
+                  {onRealignOrder && totalCount > 1 && (
+                    <>
+                      <div className="my-1 border-t border-border dark:border-white/10" />
+                      <button
+                        onClick={() => {
+                          onRealignOrder();
+                          setIsSortOpen(false);
+                        }}
+                        className="w-full flex items-start gap-2.5 rounded px-2.5 py-2 text-left text-xs text-muted hover:text-foreground hover:bg-cardHover transition-colors group"
+                        title="Re-synchronize X bookmark timeline sequence using tweet Snowflake IDs"
+                      >
+                        <div className="mt-0.5 shrink-0">
+                          <RefreshCw className="h-3.5 w-3.5 text-muted group-hover:text-foreground transition-colors" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-medium text-[11.5px] text-foreground">
+                            Realign Timeline Order
+                          </div>
+                          <div className="text-[10px] text-muted leading-tight mt-0.5">
+                            Re-syncs chronological order from tweet IDs
+                          </div>
+                        </div>
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
